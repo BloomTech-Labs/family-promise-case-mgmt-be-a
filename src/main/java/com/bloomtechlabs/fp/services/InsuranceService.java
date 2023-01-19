@@ -18,14 +18,12 @@ public class InsuranceService {
     }
 
     public Insurance findInsuranceById(Long id) {
-        return insuranceRepository.getReferenceById(id);
+        if (id == null) return null;
+        return insuranceRepository.findById(id).orElseThrow(() -> new RuntimeException("Id not found for" + id));
     }
 
     public Insurance save(Insurance insurance) {
-        if (insurance == null) {
-
-        }
-       return insuranceRepository.save(insurance);
+        return insuranceRepository.save(insurance);
     }
 
     public Insurance saveOrUpdate(Insurance insurance) {
@@ -37,8 +35,13 @@ public class InsuranceService {
     }
 
     public void delete(Long id) {
-        insuranceRepository.deleteById(id);
+        try {
+            insuranceRepository.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Input was null");
+        }
     }
+
 
 
 }

@@ -1,6 +1,6 @@
 # family-promise-case-mgmt-be-a
 
-### Java API Scaffold
+### Basic Java API Scaffold
 
 Welcome to your `Family Promise`. Use this to start your own Greenfield Project using java, spring, and common industry standards.
 

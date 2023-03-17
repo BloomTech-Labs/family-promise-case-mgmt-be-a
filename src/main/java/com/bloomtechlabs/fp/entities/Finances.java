@@ -2,7 +2,6 @@ package com.bloomtechlabs.fp.entities;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -141,5 +140,23 @@ public class Finances {
 
     public void setAmountOfAutoDebt(BigDecimal amountOfAutoDebt) {
         this.amountOfAutoDebt = amountOfAutoDebt;
+    }
+
+    @Override
+    public String toString() {
+        return "Finances{" +
+                "id=" + id +
+                ", clientId=" + clientId +
+                ", typeOfDebt='" + typeOfDebt + '\'' +
+                ", historyOfEvictions=" + historyOfEvictions +
+                ", historyOfLandlordDebt=" + historyOfLandlordDebt +
+                ", historyOfCriminalActivity=" + historyOfCriminalActivity +
+                ", historyOfPoorCredit=" + historyOfPoorCredit +
+                ", rentalHistory=" + rentalHistory +
+                ", amountOfStudentDebt=" + amountOfStudentDebt +
+                ", amountOfMedicalDebt=" + amountOfMedicalDebt +
+                ", amountOfCreditCardDebt=" + amountOfCreditCardDebt +
+                ", amountOfAutoDebt=" + amountOfAutoDebt +
+                '}';
     }
 }

@@ -74,6 +74,10 @@ public class FinancesService {
         return ResponseEntity.ok("Successfully delete finances ID " + id);
     }
 
+    public long count() {
+        return financesRepository.count();
+    }
+
     private Finances findFinancesById(UUID id) {
         return financesRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Finances Does Not Exist with this Id: " + id));

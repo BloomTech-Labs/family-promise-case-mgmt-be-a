@@ -48,7 +48,20 @@ public class Finances {
 
     public Finances() {}
 
-
+    public Finances(UUID id, UUID clientId, String typeOfDebt, Boolean historyOfEvictions, Boolean historyOfLandlordDebt, Boolean historyOfCriminalActivity, Boolean historyOfPoorCredit, Boolean rentalHistory, BigDecimal amountOfStudentDebt, BigDecimal amountOfMedicalDebt, BigDecimal amountOfCreditCardDebt, BigDecimal amountOfAutoDebt) {
+        this.id = id;
+        this.clientId = clientId;
+        this.typeOfDebt = typeOfDebt;
+        this.historyOfEvictions = historyOfEvictions;
+        this.historyOfLandlordDebt = historyOfLandlordDebt;
+        this.historyOfCriminalActivity = historyOfCriminalActivity;
+        this.historyOfPoorCredit = historyOfPoorCredit;
+        this.rentalHistory = rentalHistory;
+        this.amountOfStudentDebt = amountOfStudentDebt;
+        this.amountOfMedicalDebt = amountOfMedicalDebt;
+        this.amountOfCreditCardDebt = amountOfCreditCardDebt;
+        this.amountOfAutoDebt = amountOfAutoDebt;
+    }
 
     public UUID getId() {
         return id;

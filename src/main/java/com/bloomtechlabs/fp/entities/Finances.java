@@ -48,8 +48,8 @@ public class Finances {
 
     public Finances() {}
 
-    public Finances(UUID id, UUID clientId, String typeOfDebt, Boolean historyOfEvictions, Boolean historyOfLandlordDebt, Boolean historyOfCriminalActivity, Boolean historyOfPoorCredit, Boolean rentalHistory, BigDecimal amountOfStudentDebt, BigDecimal amountOfMedicalDebt, BigDecimal amountOfCreditCardDebt, BigDecimal amountOfAutoDebt) {
-        this.id = id;
+    public Finances(UUID clientId, String typeOfDebt, Boolean historyOfEvictions, Boolean historyOfLandlordDebt, Boolean historyOfCriminalActivity, Boolean historyOfPoorCredit, Boolean rentalHistory, BigDecimal amountOfStudentDebt, BigDecimal amountOfMedicalDebt, BigDecimal amountOfCreditCardDebt, BigDecimal amountOfAutoDebt) {
+        this.id = UUID.randomUUID();
         this.clientId = clientId;
         this.typeOfDebt = typeOfDebt;
         this.historyOfEvictions = historyOfEvictions;

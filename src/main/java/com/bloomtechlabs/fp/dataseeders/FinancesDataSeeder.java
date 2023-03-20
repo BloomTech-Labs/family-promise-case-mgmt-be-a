@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Component
@@ -21,26 +22,56 @@ public class FinancesDataSeeder implements CommandLineRunner {
     private void loadFinancesData() {
         if(financesService.count() == 0) {
 
-            UUID uuid1 = UUID.randomUUID();
+            UUID uuidClient1 = UUID.randomUUID();
 
             Finances finances1 = new Finances(
-                    uuid1,
+                    uuidClient1,
+                    "Credit card",
+                    true,
+                    true,
+                    false,
+                    true,
+                    true,
+                    BigDecimal.valueOf(10000),
+                    BigDecimal.valueOf(1000),
+                    BigDecimal.valueOf(20000),
+                    BigDecimal.valueOf(1000)
                     );
 
             financesService.createFinances(finances1);
 
-            UUID uuid2 = UUID.randomUUID();
+            UUID uuidClient2 = UUID.randomUUID();
 
             Finances finances2 = new Finances(
-                    uuid2,
+                    uuidClient2,
+                    "Personal Loans",
+                    false,
+                    true,
+                    true,
+                    true,
+                    false,
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(10000),
+                    BigDecimal.valueOf(5000),
+                    BigDecimal.valueOf(7000)
                     );
 
             financesService.createFinances(finances2);
 
-            UUID uuid3 = UUID.randomUUID();
+            UUID uuidClient3 = UUID.randomUUID();
 
             Finances finances3 = new Finances(
-                    uuid3,
+                    uuidClient3,
+                    "Payday Loans",
+                    true,
+                    false,
+                    true,
+                    false,
+                    false,
+                    BigDecimal.valueOf(500),
+                    BigDecimal.valueOf(700),
+                    BigDecimal.valueOf(1000),
+                    BigDecimal.valueOf(5500)
                     );
 
             financesService.createFinances(finances3);

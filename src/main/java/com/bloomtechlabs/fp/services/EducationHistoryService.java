@@ -36,7 +36,6 @@ public class EducationHistoryService {
 
     public ResponseEntity<EducationHistory> getEducationHistoryById(UUID id) {
         EducationHistory educationHistory = findEducationHistoryById(id);
-
         return ResponseEntity.ok(educationHistory);
     }
 
@@ -66,7 +65,7 @@ public class EducationHistoryService {
     }
 
     private EducationHistory findEducationHistoryById(UUID id) {
-        return educationHistoryRepository.findById(id.getMostSignificantBits())
+        return educationHistoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("EducationHistory Does Not Exist with this Id: " + id));
     }
 }

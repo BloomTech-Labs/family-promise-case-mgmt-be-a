@@ -38,7 +38,8 @@ public class EducationHistoryController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<EducationHistory> getEducationHistory(@PathVariable UUID id) {
+    public ResponseEntity<EducationHistory> getEducationHistory(@PathVariable(value = "id") UUID id) {
+
         return educationHistoryService.getEducationHistoryById(id);
     }
 

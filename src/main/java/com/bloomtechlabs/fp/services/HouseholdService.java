@@ -49,7 +49,7 @@ public class HouseholdService {
         if (Objects.isNull(household)) {
             throw new IllegalArgumentException("Household input cannot be null");
         }
-        Household householdToEdit = findHouseholdById(id);
+        Household householdToEdit = this.findHouseholdById(id);
 
         householdToEdit.setName(household.getName());
         householdToEdit.setTimesHomelessInThreeYears(household.getTimesHomelessInThreeYears());

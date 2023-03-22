@@ -1,5 +1,7 @@
 package com.bloomtechlabs.fp.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
@@ -18,6 +20,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "households")
+@JsonDeserialize(builder = Household.Builder.class)
 public class Household {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,8 +69,8 @@ public class Household {
     private LocalDateTime createdAt;
 
     public Household() {}
-
-    private Household(HouseholdBuilder builder) {
+    private Household(Builder builder) {
+        this.id = builder.id;
         this.name = builder.name;
         this.timesHomelessInThreeYears = builder.timesHomelessInThreeYears;
         this.totalTimeHomelessThreeYears = builder.totalTimeHomelessThreeYears;
@@ -90,109 +93,101 @@ public class Household {
         this.section8VoucherLost = builder.section8VoucherLost;
     }
 
-    public BigInteger getId() { return id; }
-
-    public String getName() { return name; }
-    public void setName(String name) {
-        this.name = name;
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public Integer getTimesHomelessInThreeYears() { return timesHomelessInThreeYears; }
-    public void setTimesHomelessInThreeYears(Integer timesHomelessInThreeYears) {
-        this.timesHomelessInThreeYears = timesHomelessInThreeYears;
+    public Builder toBuilder() {
+        return new Builder(this);
     }
 
-    public Integer getTotalTimeHomelessThreeYears() { return totalTimeHomelessThreeYears; }
-    public void setTotalTimeHomelessThreeYears(Integer totalTimeHomelessThreeYears) {
-        this.totalTimeHomelessThreeYears = totalTimeHomelessThreeYears;
+    public BigInteger getId() {
+        return id;
     }
 
-    public Integer getTotalTimeHomelessPastYear() { return totalTimeHomelessPastYear; }
-    public void setTotalTimeHomelessPastYear(Integer totalTimeHomelessPastYear) {
-        this.totalTimeHomelessPastYear = totalTimeHomelessPastYear;
+    public String getName() {
+        return name;
     }
 
-    public Boolean isPreviously_living_in_non_human_habitation() { return previouslyLivingInNonHumanHabitation; }
-    public void setPreviouslyLivingInNonHumanHabitation(Boolean previouslyLivingInNonHumanHabitation) {
-        this.previouslyLivingInNonHumanHabitation = previouslyLivingInNonHumanHabitation;
+    public Integer getTimesHomelessInThreeYears() {
+        return timesHomelessInThreeYears;
     }
 
-    public Boolean isPreviously_living_in_emergency_shelter() { return previouslyLivingInEmergencyShelter; }
-    public void setPreviouslyLivingInEmergencyShelter(Boolean previouslyLivingInEmergencyShelter) {
-        this.previouslyLivingInEmergencyShelter = previouslyLivingInEmergencyShelter;
+    public Integer getTotalTimeHomelessThreeYears() {
+        return totalTimeHomelessThreeYears;
     }
 
-    public Boolean isPreviously_unsheltered() { return previouslyUnsheltered; }
-    public void setPreviouslyUnsheltered(Boolean previouslyUnsheltered) {
-        this.previouslyUnsheltered = previouslyUnsheltered;
+    public Integer getTotalTimeHomelessPastYear() {
+        return totalTimeHomelessPastYear;
     }
 
-    public Integer getPreviousStayLength() { return previousStayLength; }
-    public void setPreviousStayLength(Integer previousStayLength) {
-        this.previousStayLength = previousStayLength;
+    public Boolean getPreviouslyLivingInNonHumanHabitation() {
+        return previouslyLivingInNonHumanHabitation;
     }
 
-    public Boolean isNeeds_interpreter() { return needsInterpreter; }
-    public void setNeedsInterpreter(Boolean needsInterpreter) {
-        this.needsInterpreter = needsInterpreter;
+    public Boolean getPreviouslyLivingInEmergencyShelter() {
+        return previouslyLivingInEmergencyShelter;
     }
 
-    public Boolean isAccess_to_private_transportation() { return accessToPrivateTransportation; }
-    public void setAccessToPrivateTransportation(Boolean accessToPrivateTransportation) {
-        this.accessToPrivateTransportation = accessToPrivateTransportation;
+    public Boolean getPreviouslyUnsheltered() {
+        return previouslyUnsheltered;
     }
 
-    public String getClientOrFamilyPhysicalIllnessHistory() { return clientOrFamilyPhysicalIllnessHistory; }
-    public void setClientOrFamilyPhysicalIllnessHistory(String clientOrFamilyPhysicalIllnessHistory) {
-        this.clientOrFamilyPhysicalIllnessHistory = clientOrFamilyPhysicalIllnessHistory;
+    public Integer getPreviousStayLength() {
+        return previousStayLength;
     }
 
-    public String getClientOrFamilyMentalIllnessHistory() { return clientOrFamilyMentalIllnessHistory; }
-    public void setClientOrFamilyMentalIllnessHistory(String clientOrFamilyMentalIllnessHistory) {
-        this.clientOrFamilyMentalIllnessHistory = clientOrFamilyMentalIllnessHistory;
+    public Boolean getNeedsInterpreter() {
+        return needsInterpreter;
     }
 
-    public String getClientOrFamilyPersonalViolenceHistory() { return clientOrFamilyPersonalViolenceHistory; }
-    public void setClientOrFamilyPersonalViolenceHistory(String clientOrFamilyPersonalViolenceHistory) {
-        this.clientOrFamilyPersonalViolenceHistory = clientOrFamilyPersonalViolenceHistory;
+    public Boolean getAccessToPrivateTransportation() {
+        return accessToPrivateTransportation;
     }
 
-    public String getClientOrFamilySubstanceDependencyHistory() { return clientOrFamilySubstanceDependencyHistory; }
-    public void setClientOrFamilySubstanceDependencyHistory(String clientOrFamilySubstanceDependencyHistory) {
-        this.clientOrFamilySubstanceDependencyHistory = clientOrFamilySubstanceDependencyHistory;
+    public String getClientOrFamilyPhysicalIllnessHistory() {
+        return clientOrFamilyPhysicalIllnessHistory;
     }
 
-    public Boolean isCps_involvement() { return cpsInvolvement; }
-    public void setCpsInvolvement(Boolean cpsInvolvement) {
-        this.cpsInvolvement = cpsInvolvement;
+    public String getClientOrFamilyMentalIllnessHistory() {
+        return clientOrFamilyMentalIllnessHistory;
     }
 
-    public Boolean isCps_involvement_active() { return cpsInvolvementActive; }
-    public void setCpsInvolvementActive(Boolean cpsInvolvementActive) {
-        this.cpsInvolvementActive = cpsInvolvementActive;
+    public String getClientOrFamilyPersonalViolenceHistory() {
+        return clientOrFamilyPersonalViolenceHistory;
     }
 
-    public String getDcyfContactName() { return dcyfContactName; }
-    public void setDcyfContactName(String dcyfContactName) {
-        this.dcyfContactName = dcyfContactName;
+    public String getClientOrFamilySubstanceDependencyHistory() {
+        return clientOrFamilySubstanceDependencyHistory;
     }
 
-    public String getDcyfContactEmail() { return dcyfContactEmail; }
-    public void setDcyfContactEmail(String dcyfContactEmail) {
-        this.dcyfContactEmail = dcyfContactEmail;
+    public Boolean getCpsInvolvement() {
+        return cpsInvolvement;
     }
 
-    public String getDcyfContactPhoneNumber() { return dcyfContactPhoneNumber; }
-    public void setDcyfContactPhoneNumber(String dcyfContactPhoneNumber) {
-        this.dcyfContactPhoneNumber = dcyfContactPhoneNumber;
+    public Boolean getCpsInvolvementActive() {
+        return cpsInvolvementActive;
     }
 
-    public Boolean isSection_8_voucher_lost() { return section8VoucherLost; }
-    public void setSection8VoucherLost(Boolean section8VoucherLost) {
-        this.section8VoucherLost = section8VoucherLost;
+    public String getDcyfContactName() {
+        return dcyfContactName;
     }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public String getDcyfContactEmail() {
+        return dcyfContactEmail;
+    }
+
+    public String getDcyfContactPhoneNumber() {
+        return dcyfContactPhoneNumber;
+    }
+
+    public Boolean getSection8VoucherLost() {
+        return section8VoucherLost;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -278,11 +273,9 @@ public class Household {
                 '}';
     }
 
-    public static final HouseholdBuilder builder() {
-        return new HouseholdBuilder();
-    }
-
-    public static class HouseholdBuilder {
+    @JsonPOJOBuilder
+    public static class Builder {
+        private BigInteger id;
         private String name;
         private Integer timesHomelessInThreeYears;
         private Integer totalTimeHomelessThreeYears;
@@ -304,104 +297,142 @@ public class Household {
         private String dcyfContactPhoneNumber;
         private Boolean section8VoucherLost;
 
-        private HouseholdBuilder() {}
+        private Builder() {}
 
-        public HouseholdBuilder withName(String name) {
+        public Builder(Household household) {
+            this.id = household.id;
+            this.name = household.name;
+            this.timesHomelessInThreeYears = household.timesHomelessInThreeYears;
+            this.totalTimeHomelessThreeYears = household.totalTimeHomelessThreeYears;
+            this.totalTimeHomelessPastYear = household.totalTimeHomelessPastYear;
+            this.previouslyLivingInNonHumanHabitation = household.previouslyLivingInNonHumanHabitation;
+            this.previouslyLivingInEmergencyShelter = household.previouslyLivingInEmergencyShelter;
+            this.previouslyUnsheltered = household.previouslyUnsheltered;
+            this.previousStayLength = household.previousStayLength;
+            this.needsInterpreter = household.needsInterpreter;
+            this.accessToPrivateTransportation = household.accessToPrivateTransportation;
+            this.clientOrFamilyPhysicalIllnessHistory = household.clientOrFamilyPhysicalIllnessHistory;
+            this.clientOrFamilyMentalIllnessHistory = household.clientOrFamilyMentalIllnessHistory;
+            this.clientOrFamilyPersonalViolenceHistory = household.clientOrFamilyPersonalViolenceHistory;
+            this.clientOrFamilySubstanceDependencyHistory = household.clientOrFamilySubstanceDependencyHistory;
+            this.cpsInvolvement = household.cpsInvolvement;
+            this.cpsInvolvementActive = household.cpsInvolvementActive;
+            this.dcyfContactName = household.dcyfContactName;
+            this.dcyfContactEmail = household.dcyfContactEmail;
+            this.dcyfContactPhoneNumber = household.dcyfContactPhoneNumber;
+            this.section8VoucherLost = household.section8VoucherLost;
+        }
+
+        /**
+         * Do not include when creating a new household.
+         * The id field is auto-incremented
+         * @param id ID field <code>BigInteger</code>
+         * @return The Builder Object
+         */
+        public Builder withId(BigInteger id) {
+            // cannot update id field if id field is there
+            if(this.id == null) {
+                this.id = id;
+            }
+            return this;
+        }
+
+        public Builder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public HouseholdBuilder withTimesHomelessInThreeYears(Integer timesHomelessInThreeYears) {
+        public Builder withTimesHomelessInThreeYears(Integer timesHomelessInThreeYears) {
             this.timesHomelessInThreeYears = timesHomelessInThreeYears;
             return this;
         }
 
-        public HouseholdBuilder withTotalTimeHomelessThreeYears(Integer totalTimeHomelessThreeYears) {
+        public Builder withTotalTimeHomelessThreeYears(Integer totalTimeHomelessThreeYears) {
             this.totalTimeHomelessThreeYears = totalTimeHomelessThreeYears;
             return this;
         }
 
-        public HouseholdBuilder withTotalTimeHomelessPastYear(Integer totalTimeHomelessPastYear) {
+        public Builder withTotalTimeHomelessPastYear(Integer totalTimeHomelessPastYear) {
             this.totalTimeHomelessPastYear = totalTimeHomelessPastYear;
             return this;
         }
 
-        public HouseholdBuilder withPreviouslyLivingInNonHumanHabitation(Boolean previouslyLivingInNonHumanHabitation) {
+        public Builder withPreviouslyLivingInNonHumanHabitation(Boolean previouslyLivingInNonHumanHabitation) {
             this.previouslyLivingInNonHumanHabitation = previouslyLivingInNonHumanHabitation;
             return this;
         }
 
-        public HouseholdBuilder withPreviouslyLivingInEmergencyShelter(Boolean previouslyLivingInEmergencyShelter) {
+        public Builder withPreviouslyLivingInEmergencyShelter(Boolean previouslyLivingInEmergencyShelter) {
             this.previouslyLivingInEmergencyShelter = previouslyLivingInEmergencyShelter;
             return this;
         }
 
-        public HouseholdBuilder withPreviouslyUnsheltered(Boolean previouslyUnsheltered) {
+        public Builder withPreviouslyUnsheltered(Boolean previouslyUnsheltered) {
             this.previouslyUnsheltered = previouslyUnsheltered;
             return this;
         }
 
-        public HouseholdBuilder withPreviousStayLength(Integer previousStayLength) {
+        public Builder withPreviousStayLength(Integer previousStayLength) {
             this.previousStayLength = previousStayLength;
             return this;
         }
 
-        public HouseholdBuilder withNeedsInterpreter(Boolean needsInterpreter) {
+        public Builder withNeedsInterpreter(Boolean needsInterpreter) {
             this.needsInterpreter = needsInterpreter;
             return this;
         }
 
-        public HouseholdBuilder withAccessToPrivateTransportation(Boolean accessToPrivateTransportation) {
+        public Builder withAccessToPrivateTransportation(Boolean accessToPrivateTransportation) {
             this.accessToPrivateTransportation = accessToPrivateTransportation;
             return this;
         }
 
-        public HouseholdBuilder withClientOrFamilyPhysicalIllnessHistory(String clientOrFamilyPhysicalIllnessHistory) {
+        public Builder withClientOrFamilyPhysicalIllnessHistory(String clientOrFamilyPhysicalIllnessHistory) {
             this.clientOrFamilyPhysicalIllnessHistory = clientOrFamilyPhysicalIllnessHistory;
             return this;
         }
 
-        public HouseholdBuilder withClientOrFamilyMentalIllnessHistory(String clientOrFamilyMentalIllnessHistory) {
+        public Builder withClientOrFamilyMentalIllnessHistory(String clientOrFamilyMentalIllnessHistory) {
             this.clientOrFamilyMentalIllnessHistory = clientOrFamilyMentalIllnessHistory;
             return this;
         }
 
-        public HouseholdBuilder withClientOrFamilyPersonalViolenceHistory(String clientOrFamilyPersonalViolenceHistory) {
+        public Builder withClientOrFamilyPersonalViolenceHistory(String clientOrFamilyPersonalViolenceHistory) {
             this.clientOrFamilyPersonalViolenceHistory = clientOrFamilyPersonalViolenceHistory;
             return this;
         }
 
-        public HouseholdBuilder withClientOrFamilySubstanceDependencyHistory(String clientOrFamilySubstanceDependencyHistory) {
+        public Builder withClientOrFamilySubstanceDependencyHistory(String clientOrFamilySubstanceDependencyHistory) {
             this.clientOrFamilySubstanceDependencyHistory = clientOrFamilySubstanceDependencyHistory;
             return this;
         }
 
-        public HouseholdBuilder withCpsInvolvement(Boolean cpsInvolvement) {
+        public Builder withCpsInvolvement(Boolean cpsInvolvement) {
             this.cpsInvolvement = cpsInvolvement;
             return this;
         }
 
-        public HouseholdBuilder withCpsInvolvementActive(Boolean cpsInvolvementActive) {
+        public Builder withCpsInvolvementActive(Boolean cpsInvolvementActive) {
             this.cpsInvolvementActive = cpsInvolvementActive;
             return this;
         }
 
-        public HouseholdBuilder withDcyfContactName(String dcyfContactName) {
+        public Builder withDcyfContactName(String dcyfContactName) {
             this.dcyfContactName = dcyfContactName;
             return this;
         }
 
-        public HouseholdBuilder withDcyfContactEmail(String dcyfContactEmail) {
+        public Builder withDcyfContactEmail(String dcyfContactEmail) {
             this.dcyfContactEmail = dcyfContactEmail;
             return this;
         }
 
-        public HouseholdBuilder withDcyfContactPhoneNumber(String dcyfContactPhoneNumber) {
+        public Builder withDcyfContactPhoneNumber(String dcyfContactPhoneNumber) {
             this.dcyfContactPhoneNumber = dcyfContactPhoneNumber;
             return this;
         }
 
-        public HouseholdBuilder withSection8VoucherLost(Boolean section8VoucherLost) {
+        public Builder withSection8VoucherLost(Boolean section8VoucherLost) {
             this.section8VoucherLost = section8VoucherLost;
             return this;
         }

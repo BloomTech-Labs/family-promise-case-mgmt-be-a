@@ -1,11 +1,15 @@
 package com.bloomtechlabs.fp.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
 @Table(name ="finances")
+@JsonDeserialize(builder = Finances.Builder.class)
 public class Finances {
 
     @Id
@@ -48,19 +52,27 @@ public class Finances {
 
     public Finances() {}
 
-    public Finances(UUID clientId, String typeOfDebt, Boolean historyOfEvictions, Boolean historyOfLandlordDebt, Boolean historyOfCriminalActivity, Boolean historyOfPoorCredit, Boolean rentalHistory, BigDecimal amountOfStudentDebt, BigDecimal amountOfMedicalDebt, BigDecimal amountOfCreditCardDebt, BigDecimal amountOfAutoDebt) {
-        this.id = UUID.randomUUID();
-        this.clientId = clientId;
-        this.typeOfDebt = typeOfDebt;
-        this.historyOfEvictions = historyOfEvictions;
-        this.historyOfLandlordDebt = historyOfLandlordDebt;
-        this.historyOfCriminalActivity = historyOfCriminalActivity;
-        this.historyOfPoorCredit = historyOfPoorCredit;
-        this.rentalHistory = rentalHistory;
-        this.amountOfStudentDebt = amountOfStudentDebt;
-        this.amountOfMedicalDebt = amountOfMedicalDebt;
-        this.amountOfCreditCardDebt = amountOfCreditCardDebt;
-        this.amountOfAutoDebt = amountOfAutoDebt;
+    public Finances(Builder builder) {
+        this.id = builder.id;
+        this.clientId = builder.clientId;
+        this.typeOfDebt = builder.typeOfDebt;
+        this.historyOfEvictions = builder.historyOfEvictions;
+        this.historyOfLandlordDebt = builder.historyOfLandlordDebt;
+        this.historyOfCriminalActivity = builder.historyOfCriminalActivity;
+        this.historyOfPoorCredit = builder.historyOfPoorCredit;
+        this.rentalHistory = builder.rentalHistory;
+        this.amountOfStudentDebt = builder.amountOfStudentDebt;
+        this.amountOfMedicalDebt = builder.amountOfMedicalDebt;
+        this.amountOfCreditCardDebt = builder.amountOfCreditCardDebt;
+        this.amountOfAutoDebt = builder.amountOfAutoDebt;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Builder toBuilder() {
+        return new Builder(this);
     }
 
     public UUID getId() {
@@ -71,88 +83,44 @@ public class Finances {
         return clientId;
     }
 
-    public void setClientId(UUID clientId) {
-        this.clientId = clientId;
-    }
-
     public String getTypeOfDebt() {
         return typeOfDebt;
-    }
-
-    public void setTypeOfDebt(String typeOfDebt) {
-        this.typeOfDebt = typeOfDebt;
     }
 
     public Boolean getHistoryOfEvictions() {
         return historyOfEvictions;
     }
 
-    public void setHistoryOfEvictions(Boolean historyOfEvictions) {
-        this.historyOfEvictions = historyOfEvictions;
-    }
-
     public Boolean getHistoryOfLandlordDebt() {
         return historyOfLandlordDebt;
-    }
-
-    public void setHistoryOfLandlordDebt(Boolean historyOfLandlordDebt) {
-        this.historyOfLandlordDebt = historyOfLandlordDebt;
     }
 
     public Boolean getHistoryOfCriminalActivity() {
         return historyOfCriminalActivity;
     }
 
-    public void setHistoryOfCriminalActivity(Boolean historyOfCriminalActivity) {
-        this.historyOfCriminalActivity = historyOfCriminalActivity;
-    }
-
     public Boolean getHistoryOfPoorCredit() {
         return historyOfPoorCredit;
-    }
-
-    public void setHistoryOfPoorCredit(Boolean historyOfPoorCredit) {
-        this.historyOfPoorCredit = historyOfPoorCredit;
     }
 
     public Boolean getRentalHistory() {
         return rentalHistory;
     }
 
-    public void setRentalHistory(Boolean rentalHistory) {
-        this.rentalHistory = rentalHistory;
-    }
-
     public BigDecimal getAmountOfStudentDebt() {
         return amountOfStudentDebt;
-    }
-
-    public void setAmountOfStudentDebt(BigDecimal amountOfStudentDebt) {
-        this.amountOfStudentDebt = amountOfStudentDebt;
     }
 
     public BigDecimal getAmountOfMedicalDebt() {
         return amountOfMedicalDebt;
     }
 
-    public void setAmountOfMedicalDebt(BigDecimal amountOfMedicalDebt) {
-        this.amountOfMedicalDebt = amountOfMedicalDebt;
-    }
-
     public BigDecimal getAmountOfCreditCardDebt() {
         return amountOfCreditCardDebt;
     }
 
-    public void setAmountOfCreditCardDebt(BigDecimal amountOfCreditCardDebt) {
-        this.amountOfCreditCardDebt = amountOfCreditCardDebt;
-    }
-
     public BigDecimal getAmountOfAutoDebt() {
         return amountOfAutoDebt;
-    }
-
-    public void setAmountOfAutoDebt(BigDecimal amountOfAutoDebt) {
-        this.amountOfAutoDebt = amountOfAutoDebt;
     }
 
     @Override
@@ -171,5 +139,110 @@ public class Finances {
                 ", amountOfCreditCardDebt=" + amountOfCreditCardDebt +
                 ", amountOfAutoDebt=" + amountOfAutoDebt +
                 '}';
+    }
+
+    @JsonPOJOBuilder
+    public static class Builder {
+        private UUID id;
+        private UUID clientId;
+        private String typeOfDebt;
+        private Boolean historyOfEvictions;
+        private Boolean historyOfLandlordDebt;
+        private Boolean historyOfCriminalActivity;
+        private Boolean historyOfPoorCredit;
+        private Boolean rentalHistory;
+        private BigDecimal amountOfStudentDebt;
+        private BigDecimal amountOfMedicalDebt;
+        private BigDecimal amountOfCreditCardDebt;
+        private BigDecimal amountOfAutoDebt;
+
+        private Builder() {
+            this.id = UUID.randomUUID();
+        }
+
+        /**
+         * toBuilder constructor.
+         * @param finances The Old Object
+         */
+        private Builder(Finances finances) {
+            this.id = finances.id;
+            this.clientId = finances.clientId;
+            this.typeOfDebt = finances.typeOfDebt;
+            this.historyOfEvictions = finances.historyOfEvictions;
+            this.historyOfLandlordDebt = finances.historyOfLandlordDebt;
+            this.historyOfCriminalActivity = finances.historyOfCriminalActivity;
+            this.historyOfPoorCredit = finances.historyOfPoorCredit;
+            this.rentalHistory = finances.rentalHistory;
+            this.amountOfStudentDebt = finances.amountOfStudentDebt;
+            this.amountOfMedicalDebt = finances.amountOfMedicalDebt;
+            this.amountOfCreditCardDebt = finances.amountOfCreditCardDebt;
+            this.amountOfAutoDebt = finances.amountOfAutoDebt;
+        }
+
+        public Builder withId(UUID id) {
+            if(this.id == null) {
+                this.id = id;
+            }
+            return this;
+        }
+
+        public Builder withClientId(UUID clientId) {
+            this.clientId = clientId;
+            return this;
+        }
+
+        public Builder withTypeOfDebt(String typeOfDebt) {
+            this.typeOfDebt = typeOfDebt;
+            return this;
+        }
+
+        public Builder withHistoryOfEvictions(Boolean historyOfEvictions) {
+            this.historyOfEvictions = historyOfEvictions;
+            return this;
+        }
+
+        public Builder withHistoryOfLandlordDebt(Boolean historyOfLandlordDebt) {
+            this.historyOfLandlordDebt = historyOfLandlordDebt;
+            return this;
+        }
+
+        public Builder withHistoryOfCriminalActivity(Boolean historyOfCriminalActivity) {
+            this.historyOfCriminalActivity = historyOfCriminalActivity;
+            return this;
+        }
+
+        public Builder withHistoryOfPoorCredit(Boolean historyOfPoorCredit) {
+            this.historyOfPoorCredit = historyOfPoorCredit;
+            return this;
+        }
+
+        public Builder withRentalHistory(Boolean rentalHistory) {
+            this.rentalHistory = rentalHistory;
+            return this;
+        }
+
+        public Builder withAmountOfStudentDebt(BigDecimal amountOfStudentDebt) {
+            this.amountOfStudentDebt = amountOfStudentDebt;
+            return this;
+        }
+
+        public Builder withAmountOfMedicalDebt(BigDecimal amountOfMedicalDebt) {
+            this.amountOfMedicalDebt = amountOfMedicalDebt;
+            return this;
+        }
+
+        public Builder withAmountOfCreditCardDebt(BigDecimal amountOfCreditCardDebt) {
+            this.amountOfCreditCardDebt = amountOfCreditCardDebt;
+            return this;
+        }
+
+        public Builder withAmountOfAutoDebt(BigDecimal amountOfAutoDebt) {
+            this.amountOfAutoDebt = amountOfAutoDebt;
+            return this;
+        }
+
+        public Finances build() {
+            return new Finances(this);
+        }
     }
 }

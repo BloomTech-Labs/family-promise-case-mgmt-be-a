@@ -23,8 +23,26 @@ public class FinancesDataSeeder implements CommandLineRunner {
         if(financesService.count() == 0) {
 
             UUID uuidClient1 = UUID.randomUUID();
+            /*
+            UUID clientId,
+             String typeOfDebt,
+              Boolean historyOfEvictions,
+               Boolean historyOfLandlordDebt,
+                Boolean historyOfCriminalActivity,
+                 Boolean historyOfPoorCredit,
+                  Boolean rentalHistory,
+                   BigDecimal amountOfStudentDebt
+                    BigDecimal amountOfMedicalDebt,
+                     BigDecimal amountOfCreditCardDebt,
+                      BigDecimal amountOfAutoDebt
+             */
 
-            Finances finances1 = new Finances(
+            Finances finances1 = Finances.
+
+
+
+
+                    new Finances(
                     uuidClient1,
                     "Credit card",
                     true,

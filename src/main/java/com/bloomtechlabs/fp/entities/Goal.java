@@ -153,9 +153,7 @@ public class Goal {
         private String clientObstacles;
         private String progressSummary;
 
-        private Builder() {
-            this.id = UUID.randomUUID();
-        }
+        private Builder() {}
 
         /**
          * toBuilder Constructor.

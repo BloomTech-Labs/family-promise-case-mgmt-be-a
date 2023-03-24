@@ -81,8 +81,12 @@ public class ClientsService {
         }
 
         private Clients findClientsById(UUID id) {
-            return clientsRepository.findById(id.getMostSignificantBits())
-                    .orElseThrow(() -> new ResourceNotFoundException("Clients Does Not Exist with this Id: " + id));
+            try {
+                return clientsRepository.findById(id.getMostSignificantBits())
+                        .orElseThrow(() -> new ResourceNotFoundException("Clients Does Not Exist with this Id: " + id));
+            } catch(ResourceNotFoundException e) {
+                return null;
+            }
         }
     }
 

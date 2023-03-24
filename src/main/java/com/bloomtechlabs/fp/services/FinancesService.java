@@ -43,32 +43,20 @@ public class FinancesService {
         return ResponseEntity.ok(finances);
     }
 
-    public ResponseEntity<Finances> updateFinances(UUID id, Finances financesDetails) {
-        if (Objects.isNull(financesDetails)) {
+    public Finances updateFinances(UUID id, Finances financesDetails) {
+        if (financesDetails == null) {
             throw new IllegalArgumentException("Finances input cannot be null");
         }
 
-        Finances finances = findFinancesById(id);
-        finances.setClientId(                  financesDetails.getClientId());
-        finances.setTypeOfDebt(                financesDetails.getTypeOfDebt());
-        finances.setHistoryOfEvictions(        financesDetails.getHistoryOfEvictions());
-        finances.setHistoryOfLandlordDebt(     financesDetails.getHistoryOfLandlordDebt());
-        finances.setHistoryOfCriminalActivity( financesDetails.getHistoryOfCriminalActivity());
-        finances.setHistoryOfPoorCredit(       financesDetails.getHistoryOfPoorCredit());
-        finances.setRentalHistory(             financesDetails.getRentalHistory());
-        finances.setAmountOfStudentDebt(       financesDetails.getAmountOfStudentDebt());
-        finances.setAmountOfMedicalDebt(       financesDetails.getAmountOfMedicalDebt());
-        finances.setAmountOfCreditCardDebt(    financesDetails.getAmountOfCreditCardDebt());
-        finances.setAmountOfAutoDebt(          financesDetails.getAmountOfAutoDebt());
+        Finances finances = this.findFinancesById(id);
 
-
-        Finances updatedFinances = financesRepository.save(finances);
+        Finances updatedFinances = this.financesRepository.save(finances);
 
         return ResponseEntity.ok(updatedFinances);
     }
 
     public ResponseEntity<String> deleteFinances(UUID id) {
-        Finances financesToDelete = findFinancesById(id);
+        Finances financesToDelete = this.findFinancesById(id);
         financesRepository.delete(financesToDelete );
 
         return ResponseEntity.ok("Successfully delete finances ID " + id);
@@ -79,7 +67,11 @@ public class FinancesService {
     }
 
     private Finances findFinancesById(UUID id) {
-        return financesRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Finances Does Not Exist with this Id: " + id));
+        try {
+            return financesRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Finances Does Not Exist with this Id: " + id));
+        } catch(ResourceNotFoundException e) {
+            return null;
+        }
     }
 }

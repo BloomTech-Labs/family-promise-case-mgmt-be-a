@@ -1,10 +1,14 @@
 package com.bloomtechlabs.fp.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 @Table(name ="employment_histories")
+@JsonDeserialize(builder = EmploymentHistory.Builder.class)
 public class EmploymentHistory {
 
     @Id
@@ -21,13 +25,22 @@ public class EmploymentHistory {
     @Column(name = "skill_certifications")
     private String skillCertifications;
 
-    public EmploymentHistory() {
+    public EmploymentHistory() {}
+
+    private EmploymentHistory(Builder builder) {
+        this.id = builder.id;
+        this.clientId = builder.clientId;
+        this.currentlyEmployed = builder.currentlyEmployed;
+        this.skillCertifications = builder.skillCertifications;
     }
 
-    public EmploymentHistory(UUID clientId, Boolean currentlyEmployed, String skillCertifications) {
-        this.clientId            = clientId;
-        this.currentlyEmployed   = currentlyEmployed;
-        this.skillCertifications = skillCertifications;
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Builder toBuilder() {
+        return new Builder(this);
     }
 
     public UUID getId() {
@@ -38,23 +51,58 @@ public class EmploymentHistory {
         return clientId;
     }
 
-    public void setClientId(UUID clientId) {
-        this.clientId = clientId;
-    }
-
     public Boolean getCurrentlyEmployed() {
         return currentlyEmployed;
-    }
-
-    public void setCurrentlyEmployed(Boolean currentlyEmployed) {
-        this.currentlyEmployed = currentlyEmployed;
     }
 
     public String getSkillCertifications() {
         return skillCertifications;
     }
 
-    public void setSkillCertifications(String skillCertifications) {
-        this.skillCertifications = skillCertifications;
+    @JsonPOJOBuilder
+    public static class Builder {
+        private UUID id;
+        private UUID clientId;
+        private Boolean currentlyEmployed;
+        private String skillCertifications;
+
+        private Builder() {}
+
+        private Builder(EmploymentHistory history) {
+            this.id = history.id;
+            this.clientId = history.clientId;
+            this.currentlyEmployed = history.currentlyEmployed;
+            this.skillCertifications = history.skillCertifications;
+        }
+
+        /**
+         * @deprecated only used for setting data
+         * @param id
+         * @return
+         */
+        @Deprecated
+        public Builder withId(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withClientId(UUID clientId) {
+            this.clientId = clientId;
+            return this;
+        }
+
+        public Builder withCurrentlyEmployed(Boolean currentlyEmployed) {
+            this.currentlyEmployed = currentlyEmployed;
+            return this;
+        }
+
+        public Builder withSkillCertifications(String skillCertifications) {
+            this.skillCertifications = skillCertifications;
+            return this;
+        }
+
+        public EmploymentHistory build() {
+            return new EmploymentHistory(this);
+        }
     }
 }

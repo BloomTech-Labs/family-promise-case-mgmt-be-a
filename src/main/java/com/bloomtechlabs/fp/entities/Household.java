@@ -51,7 +51,7 @@ public class Household {
     private String clientOrFamilyMentalIllnessHistory;
     @Column(name = "client_or_family_personal_violence_history")
     private String clientOrFamilyPersonalViolenceHistory;
-    @Column(name = "client_or_family_substance_dependency_history ")
+    @Column(name = "client_or_family_substance_dependency_history")
     private String clientOrFamilySubstanceDependencyHistory;
     @Column(name = "cps_involvement")
     private Boolean cpsInvolvement;
@@ -66,6 +66,7 @@ public class Household {
     @Column(name = "section_8_voucher_lost")
     private Boolean section8VoucherLost;
     @CreationTimestamp
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     public Household() {}

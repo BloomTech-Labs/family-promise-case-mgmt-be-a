@@ -7,6 +7,32 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+
+/**
+ * @deprecated Note: This class has no associated table and will not work.
+ * Will be handled in ticket FP-69.
+ * Classes that use this class are:
+ * {@link com.bloomtechlabs.fp.repositories.FinancesRepository FinancesRepository},
+ * {@link com.bloomtechlabs.fp.services.FinancesService FinancesService},
+ * {@link com.bloomtechlabs.fp.dataseeders.FinancesDataSeeder FinancesDataSeeder}
+ *
+ * @see <a href="https://bloomtechlabs.atlassian.net/jira/software/c/projects/FP/boards/16?modal=detail&selectedIssue=FP-69">Ticket: FP-69</a>
+ * @see com.bloomtechlabs.fp.entities.Profiles
+ * @see com.bloomtechlabs.fp.entities.Locations
+ * @see com.bloomtechlabs.fp.entities.Clients
+ * @see com.bloomtechlabs.fp.entities.ClientNotes
+ * @see com.bloomtechlabs.fp.entities.EmailAddresses
+ * @see com.bloomtechlabs.fp.entities.Genders
+ * @see com.bloomtechlabs.fp.entities.PhoneNumbers
+ * @see com.bloomtechlabs.fp.entities.Ethnicities
+ * @see com.bloomtechlabs.fp.entities.Documents
+ * @see com.bloomtechlabs.fp.entities.Races
+ * @see com.bloomtechlabs.fp.entities.Insurance
+ * @see com.bloomtechlabs.fp.entities.ContactPreferences
+ * @see com.bloomtechlabs.fp.entities.Disabilities
+ * @see com.bloomtechlabs.fp.entities.References
+ */
+@Deprecated
 @Entity
 @Table(name ="finances")
 @JsonDeserialize(builder = Finances.Builder.class)
@@ -156,9 +182,7 @@ public class Finances {
         private BigDecimal amountOfCreditCardDebt;
         private BigDecimal amountOfAutoDebt;
 
-        private Builder() {
-            this.id = UUID.randomUUID();
-        }
+        private Builder() {}
 
         /**
          * toBuilder constructor.

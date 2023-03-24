@@ -30,46 +30,52 @@ public class EducationHistoryService {
         return educationHistoryRepository.findAll(PageRequest.of(offset, limit));
     }
 
-    public EducationHistory createEducationHistory(EducationHistory educationHistory) {
-        return educationHistoryRepository.save(educationHistory);
+    public EducationHistory createEducationHistory(EducationHistory educationHistory) throws IllegalArgumentException {
+        if(educationHistory == null) {
+            throw new IllegalArgumentException("EducationHistory input cannot be null");
+        }
+
+        return this.educationHistoryRepository.save(educationHistory);
     }
 
-    public ResponseEntity<EducationHistory> getEducationHistoryById(UUID id) {
-        EducationHistory educationHistory = findEducationHistoryById(id);
-        return ResponseEntity.ok(educationHistory);
+    public EducationHistory getEducationHistoryById(UUID id) throws ResourceNotFoundException {
+        return this.findEducationHistoryById(id);
     }
 
-    public ResponseEntity<EducationHistory> updateEducationHistory(UUID id, EducationHistory educationHistoryDetails) {
-        EducationHistory educationHistory = findEducationHistoryById(id);
+    public EducationHistory updateEducationHistory(EducationHistory updatedEducationHistory) throws IllegalArgumentException, ResourceNotFoundException {
+        if(updatedEducationHistory == null) {
+            throw new IllegalArgumentException("EducationHistory input cannot be null");
+        }
 
-        educationHistory.setClientId(   educationHistoryDetails.getClientId());
-        educationHistory.setSchoolName( educationHistoryDetails.getSchoolName());
-        educationHistory.setLevel(      educationHistoryDetails.getLevel());
-        educationHistory.setStartDate(  educationHistoryDetails.getStartDate());
-        educationHistory.setEndDate(    educationHistoryDetails.getEndDate());
+        EducationHistory currentEducationHistory = this.findEducationHistoryById(updatedEducationHistory.getId());
 
-        EducationHistory updatedEducationHistory = educationHistoryRepository.save(educationHistory);
-        return ResponseEntity.ok(updatedEducationHistory);
+        currentEducationHistory = currentEducationHistory.toBuilder()
+                .withClientId(updatedEducationHistory.getClientId())
+                .withSchoolName(updatedEducationHistory.getSchoolName())
+                .withLevel(updatedEducationHistory.getLevel())
+                .withStartDate(updatedEducationHistory.getStartDate())
+                .withEndDate(updatedEducationHistory.getEndDate())
+                .build();
+
+        return this.educationHistoryRepository.save(currentEducationHistory);
     }
 
-    public ResponseEntity<String> deleteEducationHistory(UUID id) {
-        EducationHistory educationHistory = findEducationHistoryById(id);
+    public boolean deleteEducationHistoryById(UUID id) throws IllegalArgumentException {
+        if(!this.educationHistoryRepository.existsById(id)) {
+            throw new IllegalArgumentException("EducationHistory does not exist with this Id: " + id);
+        }
 
-        educationHistoryRepository.delete(educationHistory);
+        this.educationHistoryRepository.deleteById(id);
 
-        return ResponseEntity.ok("Successfully Deleted EducationHistory: " + id);
+        return this.educationHistoryRepository.existsById(id);
     }
 
     public long count() {
         return educationHistoryRepository.count();
     }
 
-    private EducationHistory findEducationHistoryById(UUID id) {
-        try {
-            return educationHistoryRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("EducationHistory Does Not Exist with this Id: " + id));
-        } catch(ResourceNotFoundException e) {
-            return null;
-        }
+    private EducationHistory findEducationHistoryById(UUID id) throws ResourceNotFoundException {
+        return educationHistoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("EducationHistory Does Not Exist with this Id: " + id));
     }
 }

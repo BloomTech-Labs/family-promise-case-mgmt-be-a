@@ -32,66 +32,67 @@ public class HouseholdService {
         return householdRepository.findAll(PageRequest.of(offset, limit));
     }
 
-    public ResponseEntity<Household> getHouseholdById(BigInteger id) {
-        Household household = findHouseholdById(id);
-
-        return ResponseEntity.ok(household);
+    public Household getHouseholdById(BigInteger id) throws ResourceNotFoundException {
+        return this.findHouseholdById(id);
     }
 
-    public Household saveHousehold(Household household) {
-        if (Objects.isNull(household)) {
+    public Household createHousehold(Household household) throws IllegalArgumentException {
+        if (household == null) {
             throw new IllegalArgumentException("Household input cannot be null");
         }
         return householdRepository.save(household);
     }
 
-    public Household updateHousehold(Household currentHousehold) {
-        if(currentHousehold == null) {
+    public Household updateHousehold(Household updatedHousehold) throws IllegalArgumentException, ResourceNotFoundException {
+        if(updatedHousehold == null) {
             throw new IllegalArgumentException("Household input cannot be null");
         }
 
-        Household householdToEdit = this.findHouseholdById(currentHousehold.getId());
-        if(householdToEdit == null) {
-            return null;
-        }
+        Household currentHousehold = this.findHouseholdById(updatedHousehold.getId());
 
-        householdToEdit.setName(household.getName());
-        householdToEdit.setTimesHomelessInThreeYears(household.getTimesHomelessInThreeYears());
-        householdToEdit.setTotalTimeHomelessThreeYears(household.getTotalTimeHomelessThreeYears());
-        householdToEdit.setTotalTimeHomelessPastYear(household.getTotalTimeHomelessPastYear());
-        householdToEdit.setPreviouslyLivingInNonHumanHabitation(household.isPreviously_living_in_non_human_habitation());
-        householdToEdit.setPreviouslyLivingInEmergencyShelter(household.isPreviously_living_in_emergency_shelter());
-        householdToEdit.setPreviouslyUnsheltered(household.isPreviously_unsheltered());
-        householdToEdit.setPreviousStayLength(household.getPreviousStayLength());
-        householdToEdit.setNeedsInterpreter(household.isNeeds_interpreter());
-        householdToEdit.setAccessToPrivateTransportation(household.isAccess_to_private_transportation());
-        householdToEdit.setClientOrFamilyPhysicalIllnessHistory(household.getClientOrFamilyPhysicalIllnessHistory());
-        householdToEdit.setClientOrFamilyMentalIllnessHistory(household.getClientOrFamilyMentalIllnessHistory());
-        householdToEdit.setClientOrFamilyPersonalViolenceHistory(household.getClientOrFamilyPersonalViolenceHistory());
-        householdToEdit.setClientOrFamilySubstanceDependencyHistory(household.getClientOrFamilySubstanceDependencyHistory());
-        householdToEdit.setCpsInvolvement(household.isCps_involvement());
-        householdToEdit.setCpsInvolvementActive(household.isCps_involvement_active());
-        householdToEdit.setDcyfContactName(household.getDcyfContactName());
-        householdToEdit.setDcyfContactEmail(household.getDcyfContactEmail());
-        householdToEdit.setDcyfContactPhoneNumber(household.getDcyfContactPhoneNumber());
-        householdToEdit.setSection8VoucherLost(household.isSection_8_voucher_lost());
+        // update household information
+        currentHousehold = currentHousehold.toBuilder()
+                .withName(updatedHousehold.getName())
+                .withTimesHomelessInThreeYears(updatedHousehold.getTimesHomelessInThreeYears())
+                .withTotalTimeHomelessThreeYears(updatedHousehold.getTotalTimeHomelessThreeYears())
+                .withTotalTimeHomelessPastYear(updatedHousehold.getTotalTimeHomelessPastYear())
+                .withPreviouslyLivingInNonHumanHabitation(updatedHousehold.getPreviouslyLivingInNonHumanHabitation())
+                .withPreviouslyLivingInEmergencyShelter(updatedHousehold.getPreviouslyLivingInEmergencyShelter())
+                .withPreviouslyUnsheltered(updatedHousehold.getPreviouslyUnsheltered())
+                .withPreviousStayLength(updatedHousehold.getPreviousStayLength())
+                .withNeedsInterpreter(updatedHousehold.getNeedsInterpreter())
+                .withAccessToPrivateTransportation(updatedHousehold.getAccessToPrivateTransportation())
+                .withClientOrFamilyPhysicalIllnessHistory(updatedHousehold.getClientOrFamilyPhysicalIllnessHistory())
+                .withClientOrFamilyMentalIllnessHistory(updatedHousehold.getClientOrFamilyMentalIllnessHistory())
+                .withClientOrFamilyPersonalViolenceHistory(updatedHousehold.getClientOrFamilyPersonalViolenceHistory())
+                .withClientOrFamilySubstanceDependencyHistory(updatedHousehold.getClientOrFamilySubstanceDependencyHistory())
+                .withCpsInvolvement(updatedHousehold.getCpsInvolvement())
+                .withCpsInvolvementActive(updatedHousehold.getCpsInvolvementActive())
+                .withDcyfContactName(updatedHousehold.getDcyfContactName())
+                .withDcyfContactEmail(updatedHousehold.getDcyfContactEmail())
+                .withDcyfContactPhoneNumber(updatedHousehold.getDcyfContactPhoneNumber())
+                .withSection8VoucherLost(updatedHousehold.getSection8VoucherLost())
+                .build();
 
-        return saveHousehold(householdToEdit);
+        return this.householdRepository.save(currentHousehold);
     }
 
-    public ResponseEntity<String> deleteHouseholdById(BigInteger id) {
-        Household householdToDelete;
-        householdToDelete = this.findHouseholdById(id);
-        householdRepository.delete(householdToDelete);
+    public boolean deleteHouseholdById(BigInteger id) {
+        if(!this.householdRepository.existsById(id)) {
+            throw new IllegalArgumentException("Household Does Not Exist with this Id: " + id);
+        }
 
-        return ResponseEntity.ok("Successfully deleted Household ID: " + id);
+        householdRepository.deleteById(id);
+
+        return this.householdRepository.existsById(id);
     }
 
     public long count() {
         return householdRepository.count();
     }
 
-    private Household findHouseholdById(BigInteger id) {
-        return this.householdRepository.getReferenceById(id);
+    private Household findHouseholdById(BigInteger id) throws ResourceNotFoundException {
+        return this.householdRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Could not find household by id: " + id));
     }
 }

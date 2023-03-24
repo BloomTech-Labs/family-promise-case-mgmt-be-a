@@ -9,14 +9,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class ClientsService {
-
-
-
         @Autowired
         ClientsRepository clientsRepository;
 
@@ -33,60 +31,57 @@ public class ClientsService {
             return clientsRepository.findAll(PageRequest.of(offset, limit));
         }
 
-        public Clients createClients(Clients clients) {
-            return clientsRepository.save(clients);
+        public Clients getClientById(UUID id) throws ResourceNotFoundException {
+            return this.findClientById(id);
         }
 
-        public ResponseEntity<Clients> getClientsById(UUID id) {
-            Clients clients = findClientsById(id);
+        public Clients createClient(Clients client) throws IllegalArgumentException {
+            if(client == null) {
+                throw new IllegalArgumentException("Client input cannot be null");
+            }
 
-            return ResponseEntity.ok(clients);
+            return this.clientsRepository.save(client);
         }
 
-        public ResponseEntity<Clients> updateClients(UUID id, Clients clientsDetails) {
-            Clients clients = findClientsById(id);
+        public Clients updateClient(Clients updatedClient) throws IllegalArgumentException, ResourceNotFoundException {
+            if(updatedClient == null) {
+                throw new IllegalArgumentException("Client input cannot be null");
+            }
 
-            clients.setHouseholdId(   clientsDetails.getHouseholdId());
-            clients.setFirstName( clientsDetails.getFirstName());
-            clients.setLastName(      clientsDetails.getLastName());
-            clients.setSsn(  clientsDetails.getSsn());
-            clients.setHoh(    clientsDetails.getHoh());
-            clients.setRelation(    clientsDetails.getRelation());
-            clients.setEducationLevel(    clientsDetails.getEducationLevel());
-            clients.setGenderId(    clientsDetails.getGenderId());
-            clients.setEthnicityId(    clientsDetails.getEthnicityId());
-            clients.setFinancesId(    clientsDetails.getFinancesId());
-            clients.setInsuranceId(    clientsDetails.getInsuranceId());
-            clients.setDocumentsId(    clientsDetails.getDocumentsId());
-            clients.setGoalsId(    clientsDetails.getGoalsId());
-            clients.setCreatedAt(    clientsDetails.getCreatedAt());
-            clients.setDisabilitiesId(    clientsDetails.getDisabilitiesId());
+            Clients currentClient = this.findClientById(updatedClient.getId());
 
+            currentClient = currentClient.toBuilder().withHouseholdId(updatedClient.getHouseholdId())
+                    .withFirstName(updatedClient.getFirstName()).withLastName(updatedClient.getLastName())
+                    .withSsn(updatedClient.getSsn()).withIsHoh(updatedClient.getHoh())
+                    .withRelation(updatedClient.getRelation()).withEducationLevel(updatedClient.getEducationLevel())
+                    .withGenderId(updatedClient.getGenderId()).withRaceId(updatedClient.getRaceId())
+                    .withEthnicityId(updatedClient.getEthnicityId()).withFinancesId(updatedClient.getFinancesId())
+                    .withInsuranceId(updatedClient.getInsuranceId()).withDocumentsId(updatedClient.getDocumentsId())
+                    .withGoalsId(updatedClient.getGoalsId()).withCreatedAt(updatedClient.getCreatedAt())
+                    .withDisabilitiesId(updatedClient.getDisabilitiesId())
+                    .build();
 
 
-            Clients updateClients = clientsRepository.save(clients);
-            return ResponseEntity.ok(updateClients);
+            return this.clientsRepository.save(currentClient);
         }
 
-        public ResponseEntity<String> deleteClients(UUID id) {
-            Clients clients = findClientsById(id);
+        public boolean deleteClient(UUID id) throws IllegalArgumentException {
+            if(!this.clientsRepository.existsById(id)) {
+                throw new IllegalArgumentException("Client does Not Exist with this Id: " + id);
+            }
 
-            clientsRepository.delete(clients);
+            this.clientsRepository.deleteById(id);
 
-            return ResponseEntity.ok("Successfully Deleted Clients: " + id);
+            return this.clientsRepository.existsById(id);
         }
 
         public long count() {
             return clientsRepository.count();
         }
 
-        private Clients findClientsById(UUID id) {
-            try {
-                return clientsRepository.findById(id.getMostSignificantBits())
-                        .orElseThrow(() -> new ResourceNotFoundException("Clients Does Not Exist with this Id: " + id));
-            } catch(ResourceNotFoundException e) {
-                return null;
-            }
+        private Clients findClientById(UUID id) throws ResourceNotFoundException {
+            return clientsRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Clients Does Not Exist with this Id: " + id));
         }
     }
 

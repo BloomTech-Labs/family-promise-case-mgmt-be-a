@@ -3,6 +3,7 @@ package com.bloomtechlabs.fp.services;
 import com.bloomtechlabs.fp.entities.Goal;
 import com.bloomtechlabs.fp.exceptions.ResourceNotFoundException;
 import com.bloomtechlabs.fp.repositories.GoalRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,8 @@ public class GoalService {
     @Autowired
     private GoalRepository goalRepository;
 
+    private final ObjectMapper mapper = new ObjectMapper();
+
     public List<Goal> getAllGoals() {
         return goalRepository.findAll();
     }
@@ -31,54 +34,56 @@ public class GoalService {
         return goalRepository.findAll(PageRequest.of(offset, limit));
     }
 
-    public Goal createGoal(Goal goal) {
-        if (Objects.isNull(goal)) {
+    public Goal createGoal(Goal goal) throws IllegalArgumentException {
+        if (goal == null) {
             throw new IllegalArgumentException("Goal input cannot be null");
         }
 
         return goalRepository.save(goal);
     }
 
-    public ResponseEntity<Goal> getGoalById(UUID id) {
-        Goal goal = findGoalById(id);
-
-        return ResponseEntity.ok(goal);
+    public Goal getGoalById(UUID id) throws ResourceNotFoundException {
+        return this.findGoalById(id);
     }
 
-    public ResponseEntity<Goal> updateGoal(UUID id, Goal goalDetails) {
-        if (Objects.isNull(goalDetails)) {
+    public Goal updateGoal(Goal updatedGoal) throws IllegalArgumentException, ResourceNotFoundException {
+        if (updatedGoal == null) {
             throw new IllegalArgumentException("Goal input cannot be null");
         }
 
-        Goal goal = findGoalById(id);
-        goal.setClientId(           goalDetails.getClientId());
-        goal.setGoalStatement(      goalDetails.getGoalStatement());
-        goal.setGoalSteps(          goalDetails.getGoalSteps());
-        goal.setGoalTargetDate(     goalDetails.getGoalTargetDate());
-        goal.setCmTask(             goalDetails.getCmTask());
-        goal.setDateArchived(       goalDetails.getDateArchived());
-        goal.setNotes(              goalDetails.getNotes());
-        goal.setClientStrengths(    goalDetails.getClientStrengths());
-        goal.setClientObstacles(    goalDetails.getClientObstacles());
-        goal.setProgressSummary(    goalDetails.getProgressSummary());
+        Goal currentGoal = this.findGoalById(updatedGoal.getId());
 
-        Goal updatedGoal = goalRepository.save(goal);
+        currentGoal = currentGoal.toBuilder()
+                .withClientId(updatedGoal.getClientId())
+                .withGoalStatement(updatedGoal.getGoalStatement())
+                .withGoalSteps(updatedGoal.getGoalSteps())
+                .withGoalTargetDate(updatedGoal.getGoalTargetDate())
+                .withCmTask(updatedGoal.getCmTask())
+                .withDateArchived(updatedGoal.getDateArchived())
+                .withNotes(updatedGoal.getNotes())
+                .withClientStrengths(updatedGoal.getClientStrengths())
+                .withClientObstacles(updatedGoal.getClientObstacles())
+                .withProgressSummary(updatedGoal.getProgressSummary())
+                .build();
 
-        return ResponseEntity.ok(updatedGoal);
+        return this.goalRepository.save(currentGoal);
     }
 
-    public ResponseEntity<String> deleteGoal(UUID id) {
-        Goal goalToDelete = findGoalById(id);
-        goalRepository.delete(goalToDelete);
+    public boolean deleteGoalById(UUID id) throws IllegalArgumentException {
+        if(!this.goalRepository.existsById(id)) {
+            throw new IllegalArgumentException("Goal Does Not Exist with this Id: " + id);
+        }
 
-        return ResponseEntity.ok("Successfully delete goal ID " + id);
+        goalRepository.deleteById(id);
+
+        return this.goalRepository.existsById(id);
     }
 
     public long count() {
         return goalRepository.count();
     }
 
-    private Goal findGoalById(UUID id) {
+    private Goal findGoalById(UUID id) throws ResourceNotFoundException {
         return goalRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Goal Does Not Exist with this Id: " + id));
     }

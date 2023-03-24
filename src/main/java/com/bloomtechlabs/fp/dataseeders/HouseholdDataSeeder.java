@@ -91,10 +91,10 @@ public class HouseholdDataSeeder implements CommandLineRunner {
                     .withName("Empty Household")
                     .build();
 
-            householdService.saveHousehold(household1);
-            householdService.saveHousehold(household2);
-            householdService.saveHousehold(household3);
-            householdService.saveHousehold(householdEmpty);
+            householdService.createHousehold(household1);
+            householdService.createHousehold(household2);
+            householdService.createHousehold(household3);
+            householdService.createHousehold(householdEmpty);
 
             System.out.println("Added " + householdService.count() + " records to the household table.");
        } else {

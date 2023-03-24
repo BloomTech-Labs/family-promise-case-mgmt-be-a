@@ -38,7 +38,7 @@ public class ClientsDataSeeder implements CommandLineRunner{
                         .withGoalsId(UUID.randomUUID()).withCreatedAt(date1).withDisabilitiesId(UUID.randomUUID())
                         .build();
 
-                clientsService.createClients(client1);
+                clientsService.createClient(client1);
 
                 System.out.println("added " + clientsService.count() +
                         " records to the clients table.");

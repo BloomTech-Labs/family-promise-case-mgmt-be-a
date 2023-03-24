@@ -1,9 +1,13 @@
 package com.bloomtechlabs.fp.controllers;
 
 import com.bloomtechlabs.fp.entities.EducationHistory;
+import com.bloomtechlabs.fp.exceptions.ResourceNotFoundException;
 import com.bloomtechlabs.fp.services.EducationHistoryService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,10 +19,12 @@ import java.util.UUID;
 public class EducationHistoryController {
 
     @Autowired
-    EducationHistoryService educationHistoryService;
+    private EducationHistoryService educationHistoryService;
+
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @GetMapping
-    List<EducationHistory> getAllEducationHistories() {
+    public List<EducationHistory> getAllEducationHistories() {
         return educationHistoryService.getAllEducationHistories();
     }
 
@@ -32,25 +38,93 @@ public class EducationHistoryController {
         return ResponseEntity.ok(educationHistoryService.getAllEducationHistoriesPaginated(offset, limit));
     }
 
-    @PostMapping
-    EducationHistory createEducationHistory(@RequestBody EducationHistory educationHistory) {
-        return educationHistoryService.createEducationHistory(educationHistory);
-    }
-
     @GetMapping("{id}")
-    public ResponseEntity<EducationHistory> getEducationHistory(@PathVariable(value = "id") UUID id) {
+    public ResponseEntity<ObjectNode> getEducationHistory(@PathVariable(value = "id") UUID id) {
+        ObjectNode json;
+        EducationHistory history;
 
-        return educationHistoryService.getEducationHistoryById(id);
+        try {
+            history = this.educationHistoryService.getEducationHistoryById(id);
+        } catch(IllegalArgumentException e) {
+            json = this.mapper.createObjectNode();
+            ObjectNode errors = json.putObject("error");
+
+            errors.put("userResponse", "Could not retrieve EducationHistory!");
+            errors.put("errorMessage", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(json);
+        }
+
+        json = this.mapper.convertValue(history, ObjectNode.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<EducationHistory> updateEducationHistory(@PathVariable UUID id,
-                                                                   @RequestBody EducationHistory educationHistory) {
-        return educationHistoryService.updateEducationHistory(id,educationHistory);
+    @PostMapping
+    public ResponseEntity<ObjectNode> createEducationHistory(@RequestBody EducationHistory educationHistory) {
+        try {
+            this.educationHistoryService.createEducationHistory(educationHistory);
+        } catch(IllegalArgumentException e) {
+            ObjectNode json = this.mapper.createObjectNode();
+            ObjectNode errors = json.putObject("error");
+            errors.put("userResponse", "Could not create EducationHistory!");
+            errors.put("errorMessage", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PutMapping
+    public ResponseEntity<ObjectNode> updateEducationHistory(@RequestBody EducationHistory educationHistory) {
+        ObjectNode json = this.mapper.createObjectNode();
+        EducationHistory history;
+
+        try {
+            history = this.educationHistoryService.updateEducationHistory(educationHistory);
+        } catch(IllegalArgumentException e) {
+            ObjectNode errors = json.putObject("errors");
+            errors.put("userResponse", "Could not update EducationHistory!");
+            errors.put("errorMessage", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+        } catch(ResourceNotFoundException e) {
+            ObjectNode errors = json.putObject("errors");
+            errors.put("userResponse", "Could not update EducationHistory!");
+            errors.put("errorMessage", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(json);
+        }
+
+        json.putPOJO("updatedEducationHistory", history);
+
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteEducationHistory(@PathVariable UUID id) {
-        return educationHistoryService.deleteEducationHistory(id);
+    public ResponseEntity<ObjectNode> deleteEducationHistory(@PathVariable UUID id) {
+        ObjectNode json = this.mapper.createObjectNode();
+        boolean isFailure;
+
+        try {
+            isFailure = this.educationHistoryService.deleteEducationHistoryById(id);
+        } catch(IllegalArgumentException e) {
+            ObjectNode errors = json.putObject("error");
+            errors.put("userResponse", "Could not delete EducationHistory!");
+            errors.put("errorMessage", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(json);
+        }
+        if(isFailure) {
+            ObjectNode errors = json.putObject("error");
+            errors.put("userResponse", "Could not delete EducationHistory!");
+            errors.put("errorMessage", "Something went wrong with this request");
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+        }
+
+        json.put("response", "EducationHistory with Id " + id + " has been successfully deleted");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(json);
     }
 }

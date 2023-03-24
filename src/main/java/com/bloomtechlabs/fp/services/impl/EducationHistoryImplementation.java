@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 /*
@@ -69,27 +70,31 @@ public class EducationHistoryImplementation  {
     @CacheEvict(cacheNames = "educationHistoryCache", allEntries = true)
     public EducationHistory update(EducationHistory educationHistory) {
 
-        Optional<EducationHistory> optionalEducationHistory = this.educationHistoryRepository.findById(educationHistory.getId().getMostSignificantBits());
+        Optional<EducationHistory> optionalEducationHistory = this.educationHistoryRepository.findById(educationHistory.getId());
         // getMostSignificantBits method is to convert UUID to long. If there are issues consider changing return type of method getId from EducationHistory to long
         if (!optionalEducationHistory.isPresent())
             return null;
         EducationHistory repEducationHistory = optionalEducationHistory.get();
-        repEducationHistory.setClientId(educationHistory.getClientId());
-        repEducationHistory.setLevel(educationHistory.getLevel());
-        repEducationHistory.setStartDate(educationHistory.getStartDate());
-        repEducationHistory.setEndDate(educationHistory.getEndDate());
-        repEducationHistory.setSchoolName(educationHistory.getSchoolName());
+
+        repEducationHistory = repEducationHistory.toBuilder()
+                .withClientId(educationHistory.getClientId())
+                .withLevel(educationHistory.getLevel())
+                .withStartDate(educationHistory.getStartDate())
+                .withEndDate(educationHistory.getEndDate())
+                .withSchoolName(educationHistory.getSchoolName())
+                .build();
+
         return this.educationHistoryRepository.save(repEducationHistory);
     }
 
     @Caching(evict = {@CacheEvict(cacheNames = "educationHistoryCache", key = "#id"),
             @CacheEvict(cacheNames = "educationHistoryCache", allEntries = true)})
-    public void delete(long id){
+    public void delete(UUID id){
         this.educationHistoryRepository.deleteById(id);
     }
 
     @Cacheable(cacheNames = "educationHistoryCache", key = "#id", unless = "#result == null")
-    public EducationHistory getCustomerById (long id) {
+    public EducationHistory getCustomerById (UUID id) {
         waitSomeTime();
         return this.educationHistoryRepository.findById(id).orElse(null);
     }

@@ -54,7 +54,7 @@ public class EducationHistoryControllerTest {
 
         EducationHistory expectedResponse = this.mapper.treeToValue(expectedResponseJson, EducationHistory.class);
 
-        ResponseEntity<EducationHistory> entity = ResponseEntity.ok(expectedResponse);
+        EducationHistory entity = this.mapper.convertValue(expectedResponse, EducationHistory.class);
         when(educationHistoryService.getEducationHistoryById(any(UUID.class)))
                 .thenReturn(entity);
 

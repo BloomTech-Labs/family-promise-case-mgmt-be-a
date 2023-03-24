@@ -65,7 +65,11 @@ public class EducationHistoryService {
     }
 
     private EducationHistory findEducationHistoryById(UUID id) {
-        return educationHistoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("EducationHistory Does Not Exist with this Id: " + id));
+        try {
+            return educationHistoryRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("EducationHistory Does Not Exist with this Id: " + id));
+        } catch(ResourceNotFoundException e) {
+            return null;
+        }
     }
 }

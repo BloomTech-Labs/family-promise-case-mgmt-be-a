@@ -4,6 +4,7 @@ import com.bloomtechlabs.fp.entities.Household;
 import com.bloomtechlabs.fp.services.HouseholdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,9 +50,16 @@ public class HouseholdController {
         return householdService.saveHousehold(household);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<Household> updateHouseholdById(@PathVariable BigInteger id, @RequestBody Household household) {
-        return ResponseEntity.ok(householdService.editHouseholdById(id, household));
+    @PutMapping
+    public ResponseEntity<Household> updateHouseholdById(@RequestBody Household household) {
+        Household updatedHousehold;
+        try {
+            updatedHousehold = householdService.updateHousehold(household)
+        } catch(IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body();
+        }
+
+        return ResponseEntity.ok();
     }
 
     @DeleteMapping("{id}")

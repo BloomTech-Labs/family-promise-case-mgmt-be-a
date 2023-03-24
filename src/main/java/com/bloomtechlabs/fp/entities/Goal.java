@@ -1,5 +1,8 @@
 package com.bloomtechlabs.fp.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +16,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "goals")
+@JsonDeserialize(builder = Goal.Builder.class)
 public class Goal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -52,18 +56,26 @@ public class Goal {
     private String progressSummary;
 
     public Goal() {}
+    private Goal(Builder builder) {
+        this.id = builder.id;
+        this.clientId = builder.clientId;
+        this.goalStatement = builder.goalStatement;
+        this.goalSteps = builder.goalSteps;
+        this.goalTargetDate = builder.goalTargetDate;
+        this.cmTask = builder.cmTask;
+        this.dateArchived = builder.dateArchived;
+        this.notes = builder.notes;
+        this.clientStrengths = builder.clientStrengths;
+        this.clientObstacles = builder.clientObstacles;
+        this.progressSummary = builder.progressSummary;
+    }
 
-    public Goal(UUID clientId, String goalStatement, String goalSteps, Date goalTargetDate, String cmTask, Date dateArchived, String notes, String clientStrengths, String clientObstacles, String progressSummary) {
-        this.clientId = clientId;
-        this.goalStatement = goalStatement;
-        this.goalSteps = goalSteps;
-        this.goalTargetDate = goalTargetDate;
-        this.cmTask = cmTask;
-        this.dateArchived = dateArchived;
-        this.notes = notes;
-        this.clientStrengths = clientStrengths;
-        this.clientObstacles = clientObstacles;
-        this.progressSummary = progressSummary;
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Builder toBuilder() {
+        return new Builder(this);
     }
 
     public UUID getId() {
@@ -74,80 +86,40 @@ public class Goal {
         return clientId;
     }
 
-    public void setClientId(UUID clientId) {
-        this.clientId = clientId;
-    }
-
     public String getGoalStatement() {
         return goalStatement;
-    }
-
-    public void setGoalStatement(String goalStatement) {
-        this.goalStatement = goalStatement;
     }
 
     public String getGoalSteps() {
         return goalSteps;
     }
 
-    public void setGoalSteps(String goalSteps) {
-        this.goalSteps = goalSteps;
-    }
-
     public Date getGoalTargetDate() {
         return goalTargetDate;
-    }
-
-    public void setGoalTargetDate(Date goalTargetDate) {
-        this.goalTargetDate = goalTargetDate;
     }
 
     public String getCmTask() {
         return cmTask;
     }
 
-    public void setCmTask(String cmTask) {
-        this.cmTask = cmTask;
-    }
-
     public Date getDateArchived() {
         return dateArchived;
-    }
-
-    public void setDateArchived(Date dateArchived) {
-        this.dateArchived = dateArchived;
     }
 
     public String getNotes() {
         return notes;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
     public String getClientStrengths() {
         return clientStrengths;
-    }
-
-    public void setClientStrengths(String clientStrengths) {
-        this.clientStrengths = clientStrengths;
     }
 
     public String getClientObstacles() {
         return clientObstacles;
     }
 
-    public void setClientObstacles(String clientObstacles) {
-        this.clientObstacles = clientObstacles;
-    }
-
     public String getProgressSummary() {
         return progressSummary;
-    }
-
-    public void setProgressSummary(String progressSummary) {
-        this.progressSummary = progressSummary;
     }
 
     @Override
@@ -165,5 +137,101 @@ public class Goal {
                 ", clientObstacles='" + clientObstacles + '\'' +
                 ", progressSummary='" + progressSummary + '\'' +
                 '}';
+    }
+
+    @JsonPOJOBuilder
+    public static class Builder {
+        private UUID id;
+        private UUID clientId;
+        private String goalStatement;
+        private String goalSteps;
+        private Date goalTargetDate;
+        private String cmTask;
+        private Date dateArchived;
+        private String notes;
+        private String clientStrengths;
+        private String clientObstacles;
+        private String progressSummary;
+
+        private Builder() {}
+
+        /**
+         * toBuilder Constructor.
+         * @param goal The Old Object
+         */
+        private Builder(Goal goal) {
+            this.id = goal.id;
+            this.clientId = goal.clientId;
+            this.goalStatement = goal.goalStatement;
+            this.goalSteps = goal.goalSteps;
+            this.goalTargetDate = goal.goalTargetDate;
+            this.cmTask = goal.cmTask;
+            this.dateArchived = goal.dateArchived;
+            this.notes = goal.notes;
+            this.clientStrengths = goal.clientStrengths;
+            this.clientObstacles = goal.clientObstacles;
+            this.progressSummary = goal.progressSummary;
+        }
+
+        public Builder withId(UUID id) {
+            if(this.id == null) {
+                this.id = id;
+            }
+            return this;
+        }
+
+        public Builder withClientId(UUID clientId) {
+            this.clientId = clientId;
+            return this;
+        }
+
+        public Builder withGoalStatement(String goalStatement) {
+            this.goalStatement = goalStatement;
+            return this;
+        }
+
+        public Builder withGoalSteps(String goalSteps) {
+            this.goalSteps = goalSteps;
+            return this;
+        }
+
+        public Builder withGoalTargetDate(Date goalTargetDate) {
+            this.goalTargetDate = goalTargetDate;
+            return this;
+        }
+
+        public Builder withCmTask(String cmTask) {
+            this.cmTask = cmTask;
+            return this;
+        }
+
+        public Builder withDateArchived(Date dateArchived) {
+            this.dateArchived = dateArchived;
+            return this;
+        }
+
+        public Builder withNotes(String notes) {
+            this.notes = notes;
+            return this;
+        }
+
+        public Builder withClientStrengths(String clientStrengths) {
+            this.clientStrengths = clientStrengths;
+            return this;
+        }
+
+        public Builder withClientObstacles(String clientObstacles) {
+            this.clientObstacles = clientObstacles;
+            return this;
+        }
+
+        public Builder withProgressSummary(String progressSummary) {
+            this.progressSummary = progressSummary;
+            return this;
+        }
+
+        public Goal build() {
+            return new Goal(this);
+        }
     }
 }

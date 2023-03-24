@@ -64,8 +64,11 @@ public class EmploymentHistoryService {
     }
 
     private EmploymentHistory findEmploymentHistoryById(UUID id) {
-        return employmentHistoryRepository.findById(id.getMostSignificantBits())
-                .orElseThrow(() -> new ResourceNotFoundException("EmploymentHistory Does Not Exist with this Id: " + id));
-
+        try {
+            return employmentHistoryRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("EmploymentHistory Does Not Exist with this Id: " + id));
+        } catch(ResourceNotFoundException e) {
+            return null;
+        }
     }
 }

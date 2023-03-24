@@ -45,11 +45,15 @@ public class HouseholdService {
         return householdRepository.save(household);
     }
 
-    public Household editHouseholdById(BigInteger id, Household household) {
-        if (Objects.isNull(household)) {
+    public Household updateHousehold(Household currentHousehold) {
+        if(currentHousehold == null) {
             throw new IllegalArgumentException("Household input cannot be null");
         }
-        Household householdToEdit = findHouseholdById(id);
+
+        Household householdToEdit = this.findHouseholdById(currentHousehold.getId());
+        if(householdToEdit == null) {
+            return null;
+        }
 
         householdToEdit.setName(household.getName());
         householdToEdit.setTimesHomelessInThreeYears(household.getTimesHomelessInThreeYears());
@@ -76,7 +80,8 @@ public class HouseholdService {
     }
 
     public ResponseEntity<String> deleteHouseholdById(BigInteger id) {
-        Household householdToDelete = findHouseholdById(id);
+        Household householdToDelete;
+        householdToDelete = this.findHouseholdById(id);
         householdRepository.delete(householdToDelete);
 
         return ResponseEntity.ok("Successfully deleted Household ID: " + id);
@@ -87,7 +92,6 @@ public class HouseholdService {
     }
 
     private Household findHouseholdById(BigInteger id) {
-        return householdRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Household does not exist for Id: " + id.toString()));
+        return this.householdRepository.getReferenceById(id);
     }
 }

@@ -29,6 +29,8 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -37,6 +39,19 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	//added for tests:
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+	testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+	testImplementation 'org.mockito:mockito-junit-jupiter:3.12.4'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.9'
+	testImplementation 'io.rest-assured:rest-assured:4.4.0'
+	testImplementation 'org.hamcrest:hamcrest:2.2'
+	testImplementation 'org.springframework.boot:spring-boot-starter-web-services'
+	testImplementation 'org.springframework.boot:spring-boot-test-autoconfigure'
+	//deserialize Java 8 objects (like LocalTime)
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
+
+
 }
 
 tasks.named('test') {

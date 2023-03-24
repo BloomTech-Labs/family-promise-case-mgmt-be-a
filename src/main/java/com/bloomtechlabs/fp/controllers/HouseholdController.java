@@ -4,6 +4,7 @@ import com.bloomtechlabs.fp.entities.Household;
 import com.bloomtechlabs.fp.services.HouseholdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,4 +59,28 @@ public class HouseholdController {
     public ResponseEntity<String> deleteHouseholdById(@PathVariable BigInteger id) {
         return householdService.deleteHouseholdById(id);
     }
+
+
+    @GetMapping("/firstname/{firstname}")
+    public ResponseEntity<List<Household>> getHouseHoldByFirstName(@PathVariable ("firstname") String firstname) {
+        List<Household> households = householdService.getHouseholdsByFirstName(firstname);
+        return new ResponseEntity<>(households, HttpStatus.OK);
+    }
+
+    @GetMapping("/lastname/{lastname}")
+    public ResponseEntity<List<Household>> getHouseHoldByLastName(@PathVariable ("lastname") String lastName) {
+        List<Household> households = householdService.getHouseholdsByLastName(lastName);
+        return new ResponseEntity<>(households, HttpStatus.OK);
+    }
+
+    @GetMapping("/needsInterpreter/{interpreterNeeds}")
+    public ResponseEntity<List<Household>> getHouseholdsByInterpreterNeeds(@PathVariable("interpreterNeeds") String interpreterNeeds) {
+        Boolean isNeedsInterpreter = Boolean.valueOf(interpreterNeeds);
+        List<Household> households = householdService.getHouseholdsByInterpreterNeeds(isNeedsInterpreter);
+        return new ResponseEntity<>(households, HttpStatus.OK);
+    }
+
+
+
+
 }

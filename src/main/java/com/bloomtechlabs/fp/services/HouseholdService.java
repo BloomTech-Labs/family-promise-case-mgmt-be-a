@@ -90,4 +90,15 @@ public class HouseholdService {
         return householdRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Household does not exist for Id: " + id.toString()));
     }
+
+    public List<Household> getHouseholdsByFirstName(String firstName) {
+        return householdRepository.findByFirstName(firstName);
+    }
+    public List<Household> getHouseholdsByLastName(String lastName) {
+        return householdRepository.findByLastName(lastName);
+    }
+
+    public List<Household> getHouseholdsByInterpreterNeeds (Boolean isNeedsInterpreter) {
+        return householdRepository.findByInterpreterNeeds(isNeedsInterpreter);
+    }
 }

@@ -3,7 +3,6 @@ package com.bloomtechlabs.fp.controllers;
 import com.bloomtechlabs.fp.entities.Household;
 import com.bloomtechlabs.fp.exceptions.ResourceNotFoundException;
 import com.bloomtechlabs.fp.services.HouseholdService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,7 @@ public class HouseholdController {
             json = this.mapper.createObjectNode();
             ObjectNode errors = json.putObject("error");
 
-            errors.put("userResponse", "Could not update household!");
+            errors.put("userResponse", "Could not get household!");
             errors.put("errorMessage", e.getMessage());
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);

@@ -26,7 +26,7 @@ public class EmailAddressService {
         return this.emailAddressRepository.findAll(PageRequest.of(offset, limit));
     }
 
-    public EmailAddress getEmailAddressesById(UUID id) throws ResourceNotFoundException {
+    public EmailAddress getEmailAddressById(UUID id) throws ResourceNotFoundException {
         EmailAddress addresses  = this.findEmailAddressById(id);
 
         if(addresses.getDeletedAt() != null) {

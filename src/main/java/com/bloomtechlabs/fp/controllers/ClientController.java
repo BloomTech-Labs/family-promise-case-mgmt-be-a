@@ -17,9 +17,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
+
     @Autowired
     private ClientService clientService;
-
 
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -103,7 +103,7 @@ public class ClientController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<ObjectNode> deleteClient(@PathVariable UUID id) {
+    public ResponseEntity<ObjectNode> deleteClientById(@PathVariable UUID id) {
         ObjectNode json = this.mapper.createObjectNode();
         boolean isFailure;
 

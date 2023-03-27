@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/employment_histories")
+@RequestMapping("/employment-histories")
 public class EmploymentHistoryController {
 
     @Autowired

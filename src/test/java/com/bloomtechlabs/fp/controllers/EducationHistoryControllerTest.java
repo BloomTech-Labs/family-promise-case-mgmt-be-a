@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.UUID;
 
@@ -41,7 +43,6 @@ public class EducationHistoryControllerTest {
     private EducationHistoryService educationHistoryService;
 
     private final ObjectMapper mapper = new ObjectMapper();
-
     @Test
     void givenValidEducationHistoryId_ReturnsValidHistory() throws Exception {
         ObjectNode expectedResponseJson = mapper.createObjectNode()

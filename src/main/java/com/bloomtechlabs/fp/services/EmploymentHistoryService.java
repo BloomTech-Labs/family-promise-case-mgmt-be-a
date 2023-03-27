@@ -30,42 +30,50 @@ public class EmploymentHistoryService {
         return employmentHistoryRepository.findAll(PageRequest.of(offset, limit));
     }
 
-    public EmploymentHistory createEmploymentHistory(EmploymentHistory employmentHistory) {
-        return employmentHistoryRepository.save(employmentHistory);
+    public EmploymentHistory createEmploymentHistory(EmploymentHistory employmentHistory) throws IllegalArgumentException {
+        if(employmentHistory == null) {
+            throw new IllegalArgumentException("EmploymentHistory input cannot be null");
+        }
+
+        return this.employmentHistoryRepository.save(employmentHistory);
     }
 
-    public ResponseEntity<EmploymentHistory> getEmploymentHistoryById(UUID id) {
-        EmploymentHistory employmentHistory = findEmploymentHistoryById(id);
-
-        return ResponseEntity.ok(employmentHistory);
+    public EmploymentHistory getEmploymentHistoryById(UUID id) throws ResourceNotFoundException {
+        return this.findEmploymentHistoryById(id);
     }
 
-    public ResponseEntity<EmploymentHistory> updateEmploymentHistory(UUID id, EmploymentHistory employmentHistoryDetails) {
-        EmploymentHistory employmentHistory = findEmploymentHistoryById(id);
+    public EmploymentHistory updateEmploymentHistory(EmploymentHistory updatedEmployeeHistory) throws IllegalArgumentException, ResourceNotFoundException {
+        if(updatedEmployeeHistory == null) {
+            throw new IllegalArgumentException("EmploymentHistory input cannot be null");
+        }
 
-        employmentHistory.setClientId(            employmentHistoryDetails.getClientId());
-        employmentHistory.setCurrentlyEmployed(   employmentHistoryDetails.getCurrentlyEmployed());
-        employmentHistory.setSkillCertifications( employmentHistoryDetails.getSkillCertifications());
+        EmploymentHistory currentHistory = this.findEmploymentHistoryById(updatedEmployeeHistory.getId());
 
-        EmploymentHistory updatedEmploymentHistory = employmentHistoryRepository.save(employmentHistory);
-        return ResponseEntity.ok(updatedEmploymentHistory);
+        currentHistory = currentHistory.toBuilder()
+                .withClientId(updatedEmployeeHistory.getClientId())
+                .withCurrentlyEmployed(updatedEmployeeHistory.getCurrentlyEmployed())
+                .withSkillCertifications(updatedEmployeeHistory.getSkillCertifications())
+                .build();
+
+        return this.employmentHistoryRepository.save(currentHistory);
     }
 
-    public ResponseEntity<String> deleteEmploymentHistory(UUID id) {
-        EmploymentHistory employmentHistory = findEmploymentHistoryById(id);
+    public boolean deleteEmploymentHistoryById(UUID id) throws ResourceNotFoundException {
+        if(!this.employmentHistoryRepository.existsById(id)) {
+            throw new ResourceNotFoundException("EmploymentHistory Does Not Exist with this Id: " + id);
+        }
 
-        employmentHistoryRepository.delete(employmentHistory);
+        this.employmentHistoryRepository.deleteById(id);
 
-        return ResponseEntity.ok("Successfully Deleted EmploymentHistory: " + id);
+        return this.employmentHistoryRepository.existsById(id);
     }
 
     public long count() {
         return employmentHistoryRepository.count();
     }
 
-    private EmploymentHistory findEmploymentHistoryById(UUID id) {
-        return employmentHistoryRepository.findById(id.getMostSignificantBits())
+    private EmploymentHistory findEmploymentHistoryById(UUID id) throws ResourceNotFoundException {
+        return employmentHistoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("EmploymentHistory Does Not Exist with this Id: " + id));
-
     }
 }

@@ -30,10 +30,14 @@ public class EducationHistoryDataSeeder implements CommandLineRunner {
             endCal1.set(2004, Calendar.DECEMBER, 31);
             Date endDate1 = endCal1.getTime();
 
-            UUID uuid1 = UUID.randomUUID();
+            EducationHistory edu1 = EducationHistory.builder()
+                    .withClientId(UUID.randomUUID())
+                    .withSchoolName("Seeder College of Higher Education")
+                    .withLevel("Bachelor's Degree")
+                    .withStartDate(startDate1)
+                    .withEndDate(endDate1)
+                    .build();
 
-            EducationHistory edu1 = new EducationHistory(uuid1,
-                    "Seeder College of Higher Education", "Bachelor's Degree", startDate1, endDate1);
 
             Calendar startCal2 = Calendar.getInstance();
             startCal2.set(2003, Calendar.JANUARY, 1);
@@ -43,10 +47,14 @@ public class EducationHistoryDataSeeder implements CommandLineRunner {
             endCal2.set(2009, Calendar.DECEMBER, 31);
             Date endDate2 = endCal2.getTime();
 
-            UUID uuid2 = UUID.randomUUID();
+            EducationHistory edu2 = EducationHistory.builder()
+                    .withClientId(UUID.randomUUID())
+                    .withSchoolName("University of Mocking Bird")
+                    .withLevel("Master's Degree")
+                    .withStartDate(startDate2)
+                    .withEndDate(endDate2)
+                    .build();
 
-            EducationHistory edu2 = new EducationHistory(uuid2,
-                    "University of Mocking Bird", "Master's Degree", startDate2, endDate2);
 
             Calendar startCal3 = Calendar.getInstance();
             startCal3.set(2008, Calendar.JANUARY, 1);
@@ -56,10 +64,14 @@ public class EducationHistoryDataSeeder implements CommandLineRunner {
             endCal3.set(2010, Calendar.DECEMBER, 31);
             Date endDate3 = endCal3.getTime();
 
-            UUID uuid3 = UUID.randomUUID();
+            EducationHistory edu3 = EducationHistory.builder()
+                    .withClientId(UUID.randomUUID())
+                    .withSchoolName("Mock University of Advanced Learning")
+                    .withLevel("Bachelor's Degree")
+                    .withStartDate(startDate3)
+                    .withEndDate(endDate3)
+                    .build();
 
-            EducationHistory edu3 = new EducationHistory(uuid3,
-                    "Mock University of Advanced Learning", "Bachelor's Degree", startDate3, endDate3);
 
             educationHistoryService.createEducationHistory(edu1);
             educationHistoryService.createEducationHistory(edu2);

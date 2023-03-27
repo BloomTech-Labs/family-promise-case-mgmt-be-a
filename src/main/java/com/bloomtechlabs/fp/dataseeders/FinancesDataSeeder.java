@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+
 @Component
 public class FinancesDataSeeder implements CommandLineRunner {
     @Autowired
@@ -21,59 +22,50 @@ public class FinancesDataSeeder implements CommandLineRunner {
 
     private void loadFinancesData() {
         if(financesService.count() == 0) {
+            Finances finances1 = Finances.builder()
+                    .withClientId(UUID.randomUUID())
+                    .withTypeOfDebt("Credit card")
+                    .withHistoryOfEvictions(true)
+                    .withHistoryOfLandlordDebt(true)
+                    .withHistoryOfCriminalActivity(false)
+                    .withHistoryOfPoorCredit(true)
+                    .withRentalHistory(true)
+                    .withAmountOfStudentDebt(BigDecimal.valueOf(10000L))
+                    .withAmountOfMedicalDebt(BigDecimal.valueOf(1000L))
+                    .withAmountOfCreditCardDebt(BigDecimal.valueOf(20000L))
+                    .withAmountOfAutoDebt(BigDecimal.valueOf(1000))
+                    .build();
 
-            UUID uuidClient1 = UUID.randomUUID();
+            Finances finances2 = Finances.builder()
+                    .withClientId(UUID.randomUUID())
+                    .withTypeOfDebt("Personal Loans")
+                    .withHistoryOfEvictions(false)
+                    .withHistoryOfLandlordDebt(true)
+                    .withHistoryOfCriminalActivity(true)
+                    .withHistoryOfPoorCredit(true)
+                    .withRentalHistory(false)
+                    .withAmountOfStudentDebt(BigDecimal.valueOf(0L))
+                    .withAmountOfMedicalDebt(BigDecimal.valueOf(10000L))
+                    .withAmountOfCreditCardDebt(BigDecimal.valueOf(5000L))
+                    .withAmountOfAutoDebt(BigDecimal.valueOf(7000L))
+                    .build();
 
-            Finances finances1 = new Finances(
-                    uuidClient1,
-                    "Credit card",
-                    true,
-                    true,
-                    false,
-                    true,
-                    true,
-                    BigDecimal.valueOf(10000),
-                    BigDecimal.valueOf(1000),
-                    BigDecimal.valueOf(20000),
-                    BigDecimal.valueOf(1000)
-                    );
+            Finances finances3 = Finances.builder()
+                    .withClientId(UUID.randomUUID())
+                    .withTypeOfDebt("Payday Loans")
+                    .withHistoryOfEvictions(true)
+                    .withHistoryOfLandlordDebt(false)
+                    .withHistoryOfCriminalActivity(true)
+                    .withHistoryOfPoorCredit(false)
+                    .withRentalHistory(false)
+                    .withAmountOfStudentDebt(BigDecimal.valueOf(500L))
+                    .withAmountOfMedicalDebt(BigDecimal.valueOf(700L))
+                    .withAmountOfCreditCardDebt(BigDecimal.valueOf(1000L))
+                    .withAmountOfAutoDebt(BigDecimal.valueOf(5500L))
+                    .build();
 
             financesService.createFinances(finances1);
-
-            UUID uuidClient2 = UUID.randomUUID();
-
-            Finances finances2 = new Finances(
-                    uuidClient2,
-                    "Personal Loans",
-                    false,
-                    true,
-                    true,
-                    true,
-                    false,
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(10000),
-                    BigDecimal.valueOf(5000),
-                    BigDecimal.valueOf(7000)
-                    );
-
             financesService.createFinances(finances2);
-
-            UUID uuidClient3 = UUID.randomUUID();
-
-            Finances finances3 = new Finances(
-                    uuidClient3,
-                    "Payday Loans",
-                    true,
-                    false,
-                    true,
-                    false,
-                    false,
-                    BigDecimal.valueOf(500),
-                    BigDecimal.valueOf(700),
-                    BigDecimal.valueOf(1000),
-                    BigDecimal.valueOf(5500)
-                    );
-
             financesService.createFinances(finances3);
 
             System.out.println("added " + financesService.count() +

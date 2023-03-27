@@ -21,25 +21,36 @@ public class EmploymentHistoryDataSeeder implements CommandLineRunner {
     private void loadEmploymentHistoryData() {
         if(employmentHistoryService.count() == 0) {
             for(int i = 1; i <= 200; i++) {
-                EmploymentHistory tempEmploymentHistory = new EmploymentHistory(
-                        UUID.fromString(String.format("00000000-0000-0000-0000-%s", i)),
-                        i % 2 == 0,
-                        String.format("Certification #%d", i));
+                EmploymentHistory tempEmploymentHistory = EmploymentHistory.builder()
+                                .withClientId(UUID.fromString(String.format("00000000-0000-0000-0000-%s", i)))
+                                .withCurrentlyEmployed(i % 2 == 0)
+                                .withSkillCertifications(String.format("Certification #%d", i))
+                                .build();
                 employmentHistoryService.createEmploymentHistory(tempEmploymentHistory);
             }
 
-            UUID uuid1 = UUID.randomUUID();
-            EmploymentHistory employmentHistory1 =
-                    new EmploymentHistory(uuid1, true, "Forklift Certified");
-            UUID uuid2 = UUID.randomUUID();
-            EmploymentHistory employmentHistory2 =
-                    new EmploymentHistory(uuid2, false, "Food Service Certified");
-            UUID uuid3 = UUID.randomUUID();
-            EmploymentHistory employmentHistory3 =
-                    new EmploymentHistory(uuid3, true, "Certified Ethical Hacking Course");
+            EmploymentHistory employmentHistory1 = EmploymentHistory.builder()
+                    .withClientId(UUID.randomUUID())
+                    .withCurrentlyEmployed(true)
+                    .withSkillCertifications("Forklift Certified")
+                    .build();
+
+            EmploymentHistory employmentHistory2 = EmploymentHistory.builder()
+                    .withClientId(UUID.randomUUID())
+                    .withCurrentlyEmployed(false)
+                    .withSkillCertifications("Food Service Certified")
+                    .build();
+
+            EmploymentHistory employmentHistory3 = EmploymentHistory.builder()
+                    .withClientId(UUID.randomUUID())
+                    .withCurrentlyEmployed(true)
+                    .withSkillCertifications("Certified Ethical Hacking Course")
+                    .build();
+
             employmentHistoryService.createEmploymentHistory(employmentHistory1);
             employmentHistoryService.createEmploymentHistory(employmentHistory2);
             employmentHistoryService.createEmploymentHistory(employmentHistory3);
+
             System.out.println("added " + employmentHistoryService.count() +
                     " records to the employment_histories table.");
         } else {

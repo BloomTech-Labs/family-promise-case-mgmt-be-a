@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -29,56 +30,57 @@ public class FinancesService {
         return financesRepository.findAll(PageRequest.of(offset, limit));
     }
 
-    public Finances createFinances(Finances finances) {
-        if (Objects.isNull(finances)) {
+    public Finances createFinances(Finances finances) throws IllegalArgumentException {
+        if (finances == null) {
             throw new IllegalArgumentException("Finances input cannot be null");
         }
 
-        return financesRepository.save(finances);
+        return this.financesRepository.save(finances);
     }
 
-    public ResponseEntity<Finances> getFinancesById(UUID id) {
-        Finances finances = findFinancesById(id);
-
-        return ResponseEntity.ok(finances);
+    public Finances getFinancesById(UUID id) throws ResourceNotFoundException {
+        return this.findFinancesById(id);
     }
 
-    public ResponseEntity<Finances> updateFinances(UUID id, Finances financesDetails) {
-        if (Objects.isNull(financesDetails)) {
+    public Finances updateFinances(Finances updatedFinances) throws IllegalArgumentException, ResourceNotFoundException {
+        if (updatedFinances == null) {
             throw new IllegalArgumentException("Finances input cannot be null");
         }
 
-        Finances finances = findFinancesById(id);
-        finances.setClientId(                  financesDetails.getClientId());
-        finances.setTypeOfDebt(                financesDetails.getTypeOfDebt());
-        finances.setHistoryOfEvictions(        financesDetails.getHistoryOfEvictions());
-        finances.setHistoryOfLandlordDebt(     financesDetails.getHistoryOfLandlordDebt());
-        finances.setHistoryOfCriminalActivity( financesDetails.getHistoryOfCriminalActivity());
-        finances.setHistoryOfPoorCredit(       financesDetails.getHistoryOfPoorCredit());
-        finances.setRentalHistory(             financesDetails.getRentalHistory());
-        finances.setAmountOfStudentDebt(       financesDetails.getAmountOfStudentDebt());
-        finances.setAmountOfMedicalDebt(       financesDetails.getAmountOfMedicalDebt());
-        finances.setAmountOfCreditCardDebt(    financesDetails.getAmountOfCreditCardDebt());
-        finances.setAmountOfAutoDebt(          financesDetails.getAmountOfAutoDebt());
+        Finances currentFinances = this.findFinancesById(updatedFinances.getId());
 
+        currentFinances = currentFinances.toBuilder()
+                .withClientId(updatedFinances.getClientId())
+                .withTypeOfDebt(updatedFinances.getTypeOfDebt())
+                .withHistoryOfEvictions(updatedFinances.getHistoryOfEvictions())
+                .withHistoryOfLandlordDebt(updatedFinances.getHistoryOfLandlordDebt())
+                .withHistoryOfCriminalActivity(updatedFinances.getHistoryOfCriminalActivity())
+                .withHistoryOfPoorCredit(updatedFinances.getHistoryOfPoorCredit())
+                .withRentalHistory(updatedFinances.getRentalHistory())
+                .withAmountOfStudentDebt(updatedFinances.getAmountOfStudentDebt())
+                .withAmountOfMedicalDebt(updatedFinances.getAmountOfMedicalDebt())
+                .withAmountOfCreditCardDebt(updatedFinances.getAmountOfCreditCardDebt())
+                .withAmountOfAutoDebt(updatedFinances.getAmountOfAutoDebt())
+                .build();
 
-        Finances updatedFinances = financesRepository.save(finances);
-
-        return ResponseEntity.ok(updatedFinances);
+        return this.financesRepository.save(currentFinances);
     }
 
-    public ResponseEntity<String> deleteFinances(UUID id) {
-        Finances financesToDelete = findFinancesById(id);
-        financesRepository.delete(financesToDelete );
+    public boolean deleteFinancesById(UUID id) throws ResourceNotFoundException {
+        if(!this.financesRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Finances Does Not Exist with this Id: " + id);
+        }
 
-        return ResponseEntity.ok("Successfully delete finances ID " + id);
+        this.financesRepository.deleteById(id);
+
+        return this.financesRepository.existsById(id);
     }
 
     public long count() {
         return financesRepository.count();
     }
 
-    private Finances findFinancesById(UUID id) {
+    private Finances findFinancesById(UUID id) throws ResourceNotFoundException {
         return financesRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Finances Does Not Exist with this Id: " + id));
     }

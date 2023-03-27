@@ -1,11 +1,15 @@
 package com.bloomtechlabs.fp.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Table(name ="education_histories")
+@JsonDeserialize(builder = EducationHistory.Builder.class)
 public class EducationHistory {
 
     @Id
@@ -33,12 +37,20 @@ public class EducationHistory {
     public EducationHistory() {
     }
 
-    public EducationHistory(UUID clientId, String schoolName, String level, Date startDate, Date endDate) {
-        this.clientId   = clientId;
-        this.schoolName = schoolName;
-        this.level      = level;
-        this.startDate  = startDate;
-        this.endDate    = endDate;
+    private EducationHistory(Builder builder) {
+        this.id = builder.id;
+        this.clientId = builder.clientId;
+        this.schoolName = builder.schoolName;
+        this.level = builder.level;
+        this.startDate = builder.startDate;
+        this.endDate = builder.endDate;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+    public Builder toBuilder() {
+        return new Builder(this);
     }
 
     public UUID getId() {
@@ -49,39 +61,73 @@ public class EducationHistory {
         return clientId;
     }
 
-    public void setClientId(UUID clientId) {
-        this.clientId = clientId;
-    }
-
     public String getSchoolName() {
         return schoolName;
-    }
-
-    public void setSchoolName(String schoolName) {
-        this.schoolName = schoolName;
     }
 
     public String getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
     public Date getStartDate() {
         return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
     }
 
     public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    @JsonPOJOBuilder
+    public static class Builder {
+        private UUID id;
+        private UUID clientId;
+        private String schoolName;
+        private String level;
+        private Date startDate;
+        private Date endDate;
+
+        private Builder() {}
+        private Builder(EducationHistory history) {
+            this.id = history.id;
+            this.clientId = history.clientId;
+            this.schoolName = history.schoolName;
+            this.level = history.level;
+            this.startDate = history.startDate;
+            this.endDate = history.endDate;
+        }
+
+        public Builder withId(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withClientId(UUID clientId) {
+            this.clientId = clientId;
+            return this;
+        }
+
+        public Builder withSchoolName(String schoolName) {
+            this.schoolName = schoolName;
+            return this;
+        }
+
+        public Builder withLevel(String level) {
+            this.level = level;
+            return this;
+        }
+
+        public Builder withStartDate(Date startDate) {
+            this.startDate = startDate;
+            return this;
+        }
+
+        public Builder withEndDate(Date endDate) {
+            this.endDate = endDate;
+            return this;
+        }
+
+        public EducationHistory build() {
+            return new EducationHistory(this);
+        }
     }
 }

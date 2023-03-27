@@ -1,6 +1,8 @@
 package com.bloomtechlabs.fp.entities;
 
 
+import com.bloomtechlabs.fp.repositories.ClientRepository;
+import com.bloomtechlabs.fp.services.ClientService;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
@@ -10,33 +12,35 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * @see <a href="https://bloomtechlabs.atlassian.net/jira/software/c/projects/FP/boards/16?modal=detail&selectedIssue=FP-69">Ticket: FP-69</a>
- * @see com.bloomtechlabs.fp.entities.Profiles
- * @see com.bloomtechlabs.fp.entities.Locations
- * @see com.bloomtechlabs.fp.entities.Finances
- * @see com.bloomtechlabs.fp.entities.ClientNotes
- * @see com.bloomtechlabs.fp.entities.EmailAddresses
- * @see com.bloomtechlabs.fp.entities.Genders
- * @see com.bloomtechlabs.fp.entities.PhoneNumbers
- * @see com.bloomtechlabs.fp.entities.Ethnicities
- * @see com.bloomtechlabs.fp.entities.Documents
- * @see com.bloomtechlabs.fp.entities.Races
- * @see com.bloomtechlabs.fp.entities.Insurance
- * @see com.bloomtechlabs.fp.entities.ContactPreferences
- * @see com.bloomtechlabs.fp.entities.Disabilities
- * @see com.bloomtechlabs.fp.entities.References
  * @deprecated Note: This class has no associated table and will not work.
  * Will be handled in ticket FP-69.
  * Classes that use this class are:
- * {@link com.bloomtechlabs.fp.repositories.ClientsRepository ClientsRepository},
- * {@link com.bloomtechlabs.fp.services.ClientsService ClientsService},
+ * {@link ClientRepository ClientsRepository},
+ * {@link ClientService ClientsService},
  * {@link com.bloomtechlabs.fp.dataseeders.ClientsDataSeeder ClientsDataSeeder}
+ *
+ * @see <a href="https://bloomtechlabs.atlassian.net/jira/software/c/projects/FP/boards/16?modal=detail&selectedIssue=FP-69">Ticket: FP-69</a>
+ * @see com.bloomtechlabs.fp.entities.ClientNotes
+ * @see com.bloomtechlabs.fp.entities.ContactPreferences
+ * @see Disability
+ * @see Document
+ * @see EmailAddress
+ * @see Ethnicity
+ * @see com.bloomtechlabs.fp.entities.Finances
+ * @see Gender
+ * @see com.bloomtechlabs.fp.entities.Insurance
+ * @see Location
+ * @see PhoneNumber
+ * @see Profile
+ * @see Race
+ * @see Reference
+ *
  */
 @Deprecated
 @Entity
 @Table(name = "clients")
-@JsonDeserialize(builder = Clients.Builder.class)
-public class Clients {
+@JsonDeserialize(builder = Client.Builder.class)
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -96,8 +100,8 @@ public class Clients {
     @Column(name = "disabilities_id")
     private UUID disabilitiesId;
 
-    public Clients() {}
-    private Clients(Builder builder) {
+    public Client() {}
+    private Client(Builder builder) {
         this.id = builder.id;
         this.householdId = builder.householdId;
         this.firstName = builder.firstName;
@@ -214,24 +218,24 @@ public class Clients {
         private UUID disabilitiesId;
 
         private Builder() {}
-        private Builder(Clients clients) {
-            this.id = clients.id;
-            this.householdId = clients.householdId;
-            this.firstName = clients.firstName;
-            this.lastName = clients.lastName;
-            this.ssn = clients.ssn;
-            this.isHoh = clients.isHoh;
-            this.relation = clients.relation;
-            this.educationLevel = clients.educationLevel;
-            this.genderId = clients.genderId;
-            this.raceId = clients.raceId;
-            this.ethnicityId = clients.ethnicityId;
-            this.financesId = clients.financesId;
-            this.insuranceId = clients.insuranceId;
-            this.documentsId = clients.documentsId;
-            this.goalsId = clients.goalsId;
-            this.createdAt = clients.createdAt;
-            this.disabilitiesId = clients.disabilitiesId;
+        private Builder(Client client) {
+            this.id = client.id;
+            this.householdId = client.householdId;
+            this.firstName = client.firstName;
+            this.lastName = client.lastName;
+            this.ssn = client.ssn;
+            this.isHoh = client.isHoh;
+            this.relation = client.relation;
+            this.educationLevel = client.educationLevel;
+            this.genderId = client.genderId;
+            this.raceId = client.raceId;
+            this.ethnicityId = client.ethnicityId;
+            this.financesId = client.financesId;
+            this.insuranceId = client.insuranceId;
+            this.documentsId = client.documentsId;
+            this.goalsId = client.goalsId;
+            this.createdAt = client.createdAt;
+            this.disabilitiesId = client.disabilitiesId;
         }
 
         public Builder withId(UUID id) {
@@ -319,8 +323,8 @@ public class Clients {
             return this;
         }
 
-        public Clients build() {
-            return new Clients(this);
+        public Client build() {
+            return new Client(this);
         }
     }
 }

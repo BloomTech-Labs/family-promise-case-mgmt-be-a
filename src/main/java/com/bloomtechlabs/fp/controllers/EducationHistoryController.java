@@ -45,7 +45,7 @@ public class EducationHistoryController {
 
         try {
             history = this.educationHistoryService.getEducationHistoryById(id);
-        } catch(IllegalArgumentException e) {
+        } catch(ResourceNotFoundException e) {
             json = this.mapper.createObjectNode();
             ObjectNode errors = json.putObject("error");
 

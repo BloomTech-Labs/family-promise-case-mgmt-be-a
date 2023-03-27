@@ -1,15 +1,14 @@
 package com.bloomtechlabs.fp.controllers;
 
-import com.bloomtechlabs.fp.entities.Clients;
+import com.bloomtechlabs.fp.entities.Client;
 import com.bloomtechlabs.fp.exceptions.ResourceNotFoundException;
-import com.bloomtechlabs.fp.services.ClientsService;
+import com.bloomtechlabs.fp.services.ClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,15 +16,16 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/clients")
-public class ClientsController {
+public class ClientController {
     @Autowired
-    private ClientsService clientsService;
+    private ClientService clientService;
+
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @GetMapping
-    public List<Clients> getAllClients() {
-        return clientsService.getAllClients();
+    public List<Client> getAllClients() {
+        return clientService.getAllClients();
     }
 
     /**
@@ -34,17 +34,17 @@ public class ClientsController {
      * @return returns a paginated list.
      */
     @GetMapping("{offset}/{limit}")
-    public ResponseEntity<Page<Clients>> getAllClientsPaginated(@PathVariable int offset, @PathVariable int limit) {
-        return ResponseEntity.ok(clientsService.getAllClientsPaginated(offset, limit));
+    public ResponseEntity<Page<Client>> getAllClientsPaginated(@PathVariable int offset, @PathVariable int limit) {
+        return ResponseEntity.ok(clientService.getAllClientsPaginated(offset, limit));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<ObjectNode> getClientById(@PathVariable UUID id) {
         ObjectNode json;
-        Clients client;
+        Client client;
 
         try {
-            client = this.clientsService.getClientById(id);
+            client = this.clientService.getClientById(id);
         } catch(ResourceNotFoundException e) {
             json = this.mapper.createObjectNode();
             ObjectNode errors = json.putObject("error");
@@ -61,9 +61,9 @@ public class ClientsController {
     }
 
     @PostMapping
-    public ResponseEntity<ObjectNode> createClient(@RequestBody Clients client) {
+    public ResponseEntity<ObjectNode> createClient(@RequestBody Client client) {
         try {
-            this.clientsService.createClient(client);
+            this.clientService.createClient(client);
         } catch(IllegalArgumentException e) {
             ObjectNode json = this.mapper.createObjectNode();
             ObjectNode errors = json.putObject("error");
@@ -77,12 +77,12 @@ public class ClientsController {
     }
 
     @PutMapping
-    public ResponseEntity<ObjectNode> updateClient(@RequestBody Clients client) {
+    public ResponseEntity<ObjectNode> updateClient(@RequestBody Client client) {
         ObjectNode json = this.mapper.createObjectNode();
-        Clients updatedClient;
+        Client updatedClient;
 
         try {
-            updatedClient = this.clientsService.updateClient(client);
+            updatedClient = this.clientService.updateClient(client);
         } catch(IllegalArgumentException e) {
             ObjectNode errors = json.putObject("errors");
             errors.put("userResponse", "Could not update Household!");
@@ -108,7 +108,7 @@ public class ClientsController {
         boolean isFailure;
 
         try {
-            isFailure = this.clientsService.deleteClient(id);
+            isFailure = this.clientService.deleteClient(id);
         } catch(IllegalArgumentException e) {
             ObjectNode errors = json.putObject("error");
             errors.put("userResponse", "Could not delete Client!");

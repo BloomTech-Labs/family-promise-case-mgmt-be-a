@@ -1,24 +1,22 @@
 package com.bloomtechlabs.fp.services;
 
-import com.bloomtechlabs.fp.entities.Clients;
+import com.bloomtechlabs.fp.entities.Client;
 import com.bloomtechlabs.fp.exceptions.ResourceNotFoundException;
-import com.bloomtechlabs.fp.repositories.ClientsRepository;
+import com.bloomtechlabs.fp.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ClientsService {
+public class ClientService {
         @Autowired
-        ClientsRepository clientsRepository;
+        ClientRepository clientsRepository;
 
-        public List<Clients> getAllClients() {
+        public List<Client> getAllClients() {
             return clientsRepository.findAll();
         }
 
@@ -27,15 +25,15 @@ public class ClientsService {
          * @param limit number of results to include per page.
          * @return returns a paginated list.
          */
-        public Page<Clients> getAllClientsPaginated(int offset, int limit) {
+        public Page<Client> getAllClientsPaginated(int offset, int limit) {
             return clientsRepository.findAll(PageRequest.of(offset, limit));
         }
 
-        public Clients getClientById(UUID id) throws ResourceNotFoundException {
+        public Client getClientById(UUID id) throws ResourceNotFoundException {
             return this.findClientById(id);
         }
 
-        public Clients createClient(Clients client) throws IllegalArgumentException {
+        public Client createClient(Client client) throws IllegalArgumentException {
             if(client == null) {
                 throw new IllegalArgumentException("Client input cannot be null");
             }
@@ -43,12 +41,12 @@ public class ClientsService {
             return this.clientsRepository.save(client);
         }
 
-        public Clients updateClient(Clients updatedClient) throws IllegalArgumentException, ResourceNotFoundException {
+        public Client updateClient(Client updatedClient) throws IllegalArgumentException, ResourceNotFoundException {
             if(updatedClient == null) {
                 throw new IllegalArgumentException("Client input cannot be null");
             }
 
-            Clients currentClient = this.findClientById(updatedClient.getId());
+            Client currentClient = this.findClientById(updatedClient.getId());
 
             currentClient = currentClient.toBuilder().withHouseholdId(updatedClient.getHouseholdId())
                     .withFirstName(updatedClient.getFirstName()).withLastName(updatedClient.getLastName())
@@ -79,7 +77,7 @@ public class ClientsService {
             return clientsRepository.count();
         }
 
-        private Clients findClientById(UUID id) throws ResourceNotFoundException {
+        private Client findClientById(UUID id) throws ResourceNotFoundException {
             return clientsRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Clients Does Not Exist with this Id: " + id));
         }

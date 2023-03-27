@@ -17,20 +17,21 @@ import java.util.UUID;
  * {@link com.bloomtechlabs.fp.dataseeders.FinancesDataSeeder FinancesDataSeeder}
  *
  * @see <a href="https://bloomtechlabs.atlassian.net/jira/software/c/projects/FP/boards/16?modal=detail&selectedIssue=FP-69">Ticket: FP-69</a>
- * @see com.bloomtechlabs.fp.entities.Profiles
- * @see com.bloomtechlabs.fp.entities.Locations
- * @see com.bloomtechlabs.fp.entities.Clients
  * @see com.bloomtechlabs.fp.entities.ClientNotes
- * @see com.bloomtechlabs.fp.entities.EmailAddresses
- * @see com.bloomtechlabs.fp.entities.Genders
- * @see com.bloomtechlabs.fp.entities.PhoneNumbers
- * @see com.bloomtechlabs.fp.entities.Ethnicities
- * @see com.bloomtechlabs.fp.entities.Documents
- * @see com.bloomtechlabs.fp.entities.Races
- * @see com.bloomtechlabs.fp.entities.Insurance
+ * @see Client
  * @see com.bloomtechlabs.fp.entities.ContactPreferences
- * @see com.bloomtechlabs.fp.entities.Disabilities
- * @see com.bloomtechlabs.fp.entities.References
+ * @see Disability
+ * @see Document
+ * @see EmailAddress
+ * @see Ethnicity
+ * @see Gender
+ * @see com.bloomtechlabs.fp.entities.Insurance
+ * @see Location
+ * @see PhoneNumber
+ * @see Profile
+ * @see Race
+ * @see Reference
+ *
  */
 @Deprecated
 @Entity

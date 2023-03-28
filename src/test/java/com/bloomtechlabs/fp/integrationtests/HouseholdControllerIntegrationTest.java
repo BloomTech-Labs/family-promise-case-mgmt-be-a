@@ -66,14 +66,13 @@ public class HouseholdControllerIntegrationTest {
         // When
         ResponseEntity<String> response = restTemplate.getForEntity("/households/firstname/{firstName}", String.class, firstName);
 
-        // Then
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // Register the JavaTimeModule
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // Ignore unknown properties since we're only concerned with name
-
         List<Household> households = objectMapper.readValue(response.getBody(), objectMapper.getTypeFactory().constructCollectionType(List.class, Household.class));
+
+        // Then
+        assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
         assertThat(households, hasSize(2));
         for (Household household : households) {
             assertThat(household.getName(), startsWithIgnoringCase("John"));

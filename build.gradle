@@ -48,6 +48,7 @@ dependencies {
 	testImplementation 'org.hamcrest:hamcrest:2.2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-web-services'
 	testImplementation 'org.springframework.boot:spring-boot-test-autoconfigure'
+
 	//deserialize Java 8 objects (like LocalTime)
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
 

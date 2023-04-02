@@ -33,6 +33,15 @@ services:
       - postgres
     restart: unless-stopped
 
+  spring-boot-app:
+    container_name: fp-springboot-container
+    image: fp-springboot
+    ports:
+      - '8080:8080'
+    networks:
+      - postgres
+    restart: unless-stopped
+
 networks:
   postgres:
     driver: bridge

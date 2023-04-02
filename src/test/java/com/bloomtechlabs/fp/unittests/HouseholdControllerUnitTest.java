@@ -61,6 +61,4 @@ public class HouseholdControllerUnitTest {
         // Verify that the getHouseholdsByFirstName method of the HouseholdService was called once.
         Mockito.verify(householdService, Mockito.times(1)).getHouseholdsByFirstName(firstName);
     }
-
-    //TODO: add unit tests to other methods in HouseholdController as required
 }

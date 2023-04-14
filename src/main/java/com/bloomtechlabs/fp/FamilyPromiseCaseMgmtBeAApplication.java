@@ -2,8 +2,11 @@ package com.bloomtechlabs.fp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
+@EnableJpaRepositories(basePackages="com.bloomtechlabs.fp", entityManagerFactoryRef="entityManagerFactory")
+
 public class FamilyPromiseCaseMgmtBeAApplication {
 
 	public static void main(String[] args) {

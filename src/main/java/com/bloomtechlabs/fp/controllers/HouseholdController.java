@@ -133,4 +133,28 @@ public class HouseholdController {
         json.put("response", "Household with Id " + id + " has been successfully deleted");
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(json);
     }
+
+
+    @GetMapping("/firstname/{firstname}")
+    public ResponseEntity<List<Household>> getHouseHoldByFirstName(@PathVariable ("firstname") String firstname) {
+        List<Household> households = householdService.getHouseholdsByFirstName(firstname);
+        return new ResponseEntity<>(households, HttpStatus.OK);
+    }
+
+    @GetMapping("/lastname/{lastname}")
+    public ResponseEntity<List<Household>> getHouseHoldByLastName(@PathVariable ("lastname") String lastName) {
+        List<Household> households = householdService.getHouseholdsByLastName(lastName);
+        return new ResponseEntity<>(households, HttpStatus.OK);
+    }
+
+    @GetMapping("/needsInterpreter/{interpreterNeeds}")
+    public ResponseEntity<List<Household>> getHouseholdsByInterpreterNeeds(@PathVariable("interpreterNeeds") String interpreterNeeds) {
+        Boolean isNeedsInterpreter = Boolean.valueOf(interpreterNeeds);
+        List<Household> households = householdService.getHouseholdsByInterpreterNeeds(isNeedsInterpreter);
+        return new ResponseEntity<>(households, HttpStatus.OK);
+    }
+
+
+
+
 }

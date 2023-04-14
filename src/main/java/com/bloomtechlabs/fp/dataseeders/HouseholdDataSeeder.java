@@ -23,22 +23,22 @@ public class HouseholdDataSeeder implements CommandLineRunner {
                     .withTimesHomelessInThreeYears(1)
                     .withTotalTimeHomelessThreeYears(100)
                     .withTotalTimeHomelessPastYear(20)
-                    .withPreviouslyLivingInNonHumanHabitation(Boolean.FALSE)
-                    .withPreviouslyLivingInEmergencyShelter(Boolean.TRUE)
-                    .withPreviouslyUnsheltered(Boolean.TRUE)
+                    .withPreviouslyLivingInNonHumanHabitation(false)
+                    .withPreviouslyLivingInEmergencyShelter(true)
+                    .withPreviouslyUnsheltered(true)
                     .withPreviousStayLength(20)
-                    .withNeedsInterpreter(Boolean.FALSE)
-                    .withAccessToPrivateTransportation(Boolean.TRUE)
+                    .withNeedsInterpreter(true)
+                    .withAccessToPrivateTransportation(true)
                     .withClientOrFamilyPhysicalIllnessHistory("sausage fingers")
                     .withClientOrFamilyMentalIllnessHistory("disruptive behavior")
                     .withClientOrFamilyPersonalViolenceHistory("bird assault")
                     .withClientOrFamilySubstanceDependencyHistory("none")
-                    .withCpsInvolvement(Boolean.FALSE)
-                    .withCpsInvolvementActive(Boolean.FALSE)
+                    .withCpsInvolvement(false)
+                    .withCpsInvolvementActive(false)
                     .withDcyfContactName("Peter Griffin")
                     .withDcyfContactEmail("peter.griffin@quahog.org")
                     .withDcyfContactPhoneNumber("555-444-3333")
-                    .withSection8VoucherLost(Boolean.FALSE)
+                    .withSection8VoucherLost(false)
                     .build();
 
             Household household2 = Household.builder()
@@ -46,22 +46,22 @@ public class HouseholdDataSeeder implements CommandLineRunner {
                     .withTimesHomelessInThreeYears(3)
                     .withTotalTimeHomelessThreeYears(200)
                     .withTotalTimeHomelessPastYear(60)
-                    .withPreviouslyLivingInNonHumanHabitation(Boolean.TRUE)
-                    .withPreviouslyLivingInEmergencyShelter(Boolean.FALSE)
-                    .withPreviouslyUnsheltered(Boolean.TRUE)
+                    .withPreviouslyLivingInNonHumanHabitation(true)
+                    .withPreviouslyLivingInEmergencyShelter(false)
+                    .withPreviouslyUnsheltered(true)
                     .withPreviousStayLength(60)
-                    .withNeedsInterpreter(Boolean.FALSE)
-                    .withAccessToPrivateTransportation(Boolean.FALSE)
+                    .withNeedsInterpreter(false)
+                    .withAccessToPrivateTransportation(false)
                     .withClientOrFamilyPhysicalIllnessHistory("eyesight, high cholesterol, high blood pressure")
                     .withClientOrFamilyMentalIllnessHistory("bipolar, sociopath, schizophrenia")
                     .withClientOrFamilyPersonalViolenceHistory("gun violence")
                     .withClientOrFamilySubstanceDependencyHistory("alcohol, narcotics")
-                    .withCpsInvolvement(Boolean.TRUE)
-                    .withCpsInvolvementActive(Boolean.FALSE)
+                    .withCpsInvolvement(true)
+                    .withCpsInvolvementActive(false)
                     .withDcyfContactName("Frank Reynolds")
                     .withDcyfContactEmail("frank.reynolds@paddyspub.com")
                     .withDcyfContactPhoneNumber("555-111-2222")
-                    .withSection8VoucherLost(Boolean.TRUE)
+                    .withSection8VoucherLost(true)
                     .build();
 
             Household household3 = Household.builder()
@@ -69,32 +69,32 @@ public class HouseholdDataSeeder implements CommandLineRunner {
                     .withTimesHomelessInThreeYears(2)
                     .withTotalTimeHomelessThreeYears(90)
                     .withTotalTimeHomelessPastYear(30)
-                    .withPreviouslyLivingInNonHumanHabitation(Boolean.TRUE)
-                    .withPreviouslyLivingInEmergencyShelter(Boolean.FALSE)
-                    .withPreviouslyUnsheltered(Boolean.TRUE)
+                    .withPreviouslyLivingInNonHumanHabitation(true)
+                    .withPreviouslyLivingInEmergencyShelter(false)
+                    .withPreviouslyUnsheltered(true)
                     .withPreviousStayLength(7)
-                    .withNeedsInterpreter(Boolean.FALSE)
-                    .withAccessToPrivateTransportation(Boolean.TRUE)
+                    .withNeedsInterpreter(false)
+                    .withAccessToPrivateTransportation(true)
                     .withClientOrFamilyPhysicalIllnessHistory("cancer, cerebral palsy")
                     .withClientOrFamilyMentalIllnessHistory("narcissistic personality disorder")
                     .withClientOrFamilyPersonalViolenceHistory("murder, gun violence, arson")
                     .withClientOrFamilySubstanceDependencyHistory("alcohol, tobacco")
-                    .withCpsInvolvement(Boolean.TRUE)
-                    .withCpsInvolvementActive(Boolean.TRUE)
+                    .withCpsInvolvement(true)
+                    .withCpsInvolvementActive(true)
                     .withDcyfContactName("Walter White")
                     .withDcyfContactEmail("walter.white@breakingbad.org")
                     .withDcyfContactPhoneNumber("555-999-9999")
-                    .withSection8VoucherLost(Boolean.FALSE)
+                    .withSection8VoucherLost(false)
                     .build();
 
             Household householdEmpty = Household.builder()
                     .withName("Empty Household")
                     .build();
 
-            householdService.saveHousehold(household1);
-            householdService.saveHousehold(household2);
-            householdService.saveHousehold(household3);
-            householdService.saveHousehold(householdEmpty);
+            householdService.createHousehold(household1);
+            householdService.createHousehold(household2);
+            householdService.createHousehold(household3);
+            householdService.createHousehold(householdEmpty);
 
             System.out.println("Added " + householdService.count() + " records to the household table.");
        } else {

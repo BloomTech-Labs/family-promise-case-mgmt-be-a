@@ -30,7 +30,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-
+	implementation 'com.github.jedis-lock:jedis-lock:1.0.0'
+	implementation 'redis.clients:jedis:4.3.1'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -51,6 +52,10 @@ dependencies {
 
 	//deserialize Java 8 objects (like LocalTime)
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
+	// added for Redis (caching):
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.7.9'
+
 
 
 }

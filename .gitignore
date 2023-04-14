@@ -41,3 +41,4 @@ application-dev.properties
 data/pg
 resources/application.yaml
 
+/.env

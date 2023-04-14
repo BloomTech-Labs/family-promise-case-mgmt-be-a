@@ -1,7 +1,10 @@
 package com.bloomtechlabs.fp.controllers;
 
 import com.bloomtechlabs.fp.entities.Household;
+import com.bloomtechlabs.fp.exceptions.ResourceNotFoundException;
 import com.bloomtechlabs.fp.services.HouseholdService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,6 +28,8 @@ public class HouseholdController {
     @Autowired
     private HouseholdService householdService;
 
+    private final ObjectMapper mapper = new ObjectMapper();
+
     @GetMapping
     public List<Household> findAllHouseholds() {
         return householdService.findAllHouseholds();
@@ -41,23 +46,92 @@ public class HouseholdController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Household> getHouseholdById(@PathVariable BigInteger id) {
-        return householdService.getHouseholdById(id);
+    public ResponseEntity<ObjectNode> getHouseholdById(@PathVariable BigInteger id) {
+        ObjectNode json;
+        Household household;
+
+        try {
+            household = this.householdService.getHouseholdById(id);
+        } catch(ResourceNotFoundException e) {
+            json = this.mapper.createObjectNode();
+            ObjectNode errors = json.putObject("error");
+
+            errors.put("userResponse", "Could not get household!");
+            errors.put("errorMessage", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+        }
+
+        json = this.mapper.convertValue(household, ObjectNode.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
     @PostMapping
-    public Household createHousehold(@RequestBody Household household) {
-        return householdService.saveHousehold(household);
+    public ResponseEntity<ObjectNode> createHousehold(@RequestBody Household household) {
+        try {
+            this.householdService.createHousehold(household);
+        } catch(IllegalArgumentException e) {
+            ObjectNode json = this.mapper.createObjectNode();
+            ObjectNode errors = json.putObject("error");
+            errors.put("userResponse", "Could not create household!");
+            errors.put("errorMessage", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<Household> updateHouseholdById(@PathVariable BigInteger id, @RequestBody Household household) {
-        return ResponseEntity.ok(householdService.editHouseholdById(id, household));
+    @PutMapping
+    public ResponseEntity<ObjectNode> updateHousehold(@RequestBody Household household) {
+        ObjectNode json = this.mapper.createObjectNode();
+        Household updatedHousehold;
+
+        try {
+            updatedHousehold = this.householdService.updateHousehold(household);
+        } catch(IllegalArgumentException e) {
+            ObjectNode errors = json.putObject("errors");
+            errors.put("userResponse", "Could not update Household!");
+            errors.put("errorMessage", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+        } catch(ResourceNotFoundException e) {
+            ObjectNode errors = json.putObject("errors");
+            errors.put("userResponse", "Could not update Household!");
+            errors.put("errorMessage", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(json);
+        }
+
+        json.putPOJO("updatedHousehold", updatedHousehold);
+
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteHouseholdById(@PathVariable BigInteger id) {
-        return householdService.deleteHouseholdById(id);
+    public ResponseEntity<ObjectNode> deleteHouseholdById(@PathVariable BigInteger id) {
+        ObjectNode json = this.mapper.createObjectNode();
+        boolean isFailure;
+        try {
+            isFailure = this.householdService.deleteHouseholdById(id);
+        } catch(IllegalArgumentException e) {
+            ObjectNode errors = json.putObject("error");
+            errors.put("userResponse", "Could not delete Household!");
+            errors.put("errorMessage", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(json);
+        }
+        if(isFailure) {
+            ObjectNode errors = json.putObject("error");
+            errors.put("userResponse", "Could not delete Household!");
+            errors.put("errorMessage", "Something went wrong with this request");
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+        }
+
+        json.put("response", "Household with Id " + id + " has been successfully deleted");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(json);
     }
 
 
